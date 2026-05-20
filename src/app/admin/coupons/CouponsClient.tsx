@@ -250,7 +250,7 @@ export default function CouponsClient({ initialData }: { initialData: any[] }) {
             <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 leading-none">
               Total
             </p>
-            <h3 className="text-2xl sm:text-3xl font-serif font-black text-primary-dark tabular-nums truncate">
+            <h3 className="text-2xl sm:text-3xl font-number font-black text-primary-dark tabular-nums truncate">
               {coupons.length}
             </h3>
           </div>
@@ -263,7 +263,7 @@ export default function CouponsClient({ initialData }: { initialData: any[] }) {
             <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 leading-none">
               Active
             </p>
-            <h3 className="text-2xl sm:text-3xl font-serif font-black text-primary-dark tabular-nums truncate">
+            <h3 className="text-2xl sm:text-3xl font-number font-black text-primary-dark tabular-nums truncate">
               {coupons.filter((c) => c.isActive).length}
             </h3>
           </div>
@@ -276,7 +276,7 @@ export default function CouponsClient({ initialData }: { initialData: any[] }) {
             <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1 leading-none">
               Used
             </p>
-            <h3 className="text-2xl sm:text-3xl font-serif font-black text-primary-dark tabular-nums truncate">
+            <h3 className="text-2xl sm:text-3xl font-number font-black text-primary-dark tabular-nums truncate">
               {coupons.reduce((acc, c) => acc + (c.usedCount || 0), 0)}
             </h3>
           </div>

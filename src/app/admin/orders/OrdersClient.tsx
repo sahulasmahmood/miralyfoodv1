@@ -63,6 +63,85 @@ export default function OrdersClient({
     estimatedDeliveryDate: "",
     shippingNotes: "",
   });
+  const [srBusyOrderId, setSrBusyOrderId] = useState<string | null>(null);
+
+  const updateOrderInList = (orderId: string, patch: Record<string, any>) => {
+    setOrders((prev) =>
+      prev.map((o) => (o._id === orderId ? { ...o, ...patch } : o)),
+    );
+    if (viewingOrder?._id === orderId) {
+      setViewingOrder((prev: any) => (prev ? { ...prev, ...patch } : prev));
+    }
+    if (trackingOrder?._id === orderId) {
+      setTrackingOrder((prev: any) => (prev ? { ...prev, ...patch } : prev));
+    }
+  };
+
+  const handleShiprocketPush = async (orderId: string) => {
+    setSrBusyOrderId(orderId);
+    try {
+      const res = await fetch(
+        `/api/admin/orders/${orderId}/shiprocket/push`,
+        { method: "POST" },
+      );
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Pushed to Shiprocket");
+        updateOrderInList(orderId, {
+          shiprocket: {
+            ...(orders.find((o) => o._id === orderId)?.shiprocket || {}),
+            orderId: data.srOrderId,
+            shipmentId: data.shipmentId,
+            status: "pushed",
+            lastError: null,
+          },
+          awbNumber: data.awbCode || undefined,
+          courierName: data.courierName || undefined,
+        });
+      } else {
+        toast.error(data.error || "Push failed");
+        updateOrderInList(orderId, {
+          shiprocket: {
+            ...(orders.find((o) => o._id === orderId)?.shiprocket || {}),
+            status: "failed",
+            lastError: data.error,
+          },
+        });
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Push failed");
+    } finally {
+      setSrBusyOrderId(null);
+    }
+  };
+
+  const handleShiprocketRefresh = async (orderId: string) => {
+    setSrBusyOrderId(orderId);
+    try {
+      const res = await fetch(
+        `/api/admin/orders/${orderId}/shiprocket/refresh`,
+        { method: "POST" },
+      );
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Tracking refreshed");
+        const t = data.tracking || {};
+        const patch: Record<string, any> = {};
+        if (t.awb) patch.awbNumber = t.awb;
+        if (t.courierName) patch.courierName = t.courierName;
+        if (t.trackUrl) patch.trackingLink = t.trackUrl;
+        if (t.expectedDelivery)
+          patch.estimatedDeliveryDate = t.expectedDelivery;
+        updateOrderInList(orderId, patch);
+      } else {
+        toast.error(data.error || "Refresh failed");
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Refresh failed");
+    } finally {
+      setSrBusyOrderId(null);
+    }
+  };
   const [selectedOrders, setSelectedOrders] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState("Processing");
   const [bulkUpdating, setBulkUpdating] = useState(false);
@@ -383,7 +462,7 @@ export default function OrdersClient({
                 Total Revenue
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-serif font-black text-primary-dark tabular-nums">
+            <p className="text-2xl sm:text-3xl font-number font-black text-primary-dark tabular-nums">
               ₹{stats.totalRevenue.toLocaleString()}
             </p>
             <p className="text-[10px] sm:text-xs text-gray-400 mt-1 font-medium">
@@ -400,7 +479,7 @@ export default function OrdersClient({
                 Active Orders
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-serif font-black text-blue-600 tabular-nums">
+            <p className="text-2xl sm:text-3xl font-number font-black text-blue-600 tabular-nums">
               {stats.activeOrders}
             </p>
             <p className="text-[10px] sm:text-xs text-gray-400 mt-1 font-medium">
@@ -417,7 +496,7 @@ export default function OrdersClient({
                 Today's Orders
               </span>
             </div>
-            <p className="text-2xl sm:text-3xl font-serif font-black text-green-600 tabular-nums">
+            <p className="text-2xl sm:text-3xl font-number font-black text-green-600 tabular-nums">
               {stats.todayOrders}
             </p>
             <p className="text-[10px] sm:text-xs text-gray-400 mt-1 font-medium">
@@ -966,6 +1045,76 @@ export default function OrdersClient({
                   </div>
                 </div>
 
+                {/* Shiprocket status row */}
+                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 mb-6 sm:mb-8">
+                  <div className="flex items-center justify-between gap-4 flex-wrap">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Truck className="text-primary shrink-0" size={18} />
+                      <div className="min-w-0">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                          Shiprocket
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                          {(() => {
+                            const sr = viewingOrder.shiprocket;
+                            const status = sr?.status || "pending";
+                            const styles: Record<string, string> = {
+                              pushed: "bg-green-100 text-green-700",
+                              pending: "bg-gray-100 text-gray-600",
+                              failed: "bg-red-100 text-red-700",
+                              cancelled: "bg-amber-100 text-amber-700",
+                            };
+                            return (
+                              <span
+                                className={`text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded ${styles[status] || styles.pending}`}
+                              >
+                                {status}
+                              </span>
+                            );
+                          })()}
+                          {viewingOrder.shiprocket?.orderId && (
+                            <span className="text-xs text-gray-500 font-mono">
+                              SR #{viewingOrder.shiprocket.orderId}
+                            </span>
+                          )}
+                        </div>
+                        {viewingOrder.shiprocket?.lastError && (
+                          <p className="text-[11px] text-red-600 mt-1 truncate max-w-md">
+                            {viewingOrder.shiprocket.lastError}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      {(!viewingOrder.shiprocket?.orderId ||
+                        viewingOrder.shiprocket?.status === "failed") && (
+                        <button
+                          onClick={() => handleShiprocketPush(viewingOrder._id)}
+                          disabled={srBusyOrderId === viewingOrder._id}
+                          className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
+                        >
+                          {srBusyOrderId === viewingOrder._id
+                            ? "Pushing..."
+                            : "Push to Shiprocket"}
+                        </button>
+                      )}
+                      {viewingOrder.shiprocket?.shipmentId && (
+                        <button
+                          onClick={() =>
+                            handleShiprocketRefresh(viewingOrder._id)
+                          }
+                          disabled={srBusyOrderId === viewingOrder._id}
+                          className="bg-gray-900 text-white px-4 py-2 rounded-lg text-xs font-bold disabled:opacity-50"
+                        >
+                          {srBusyOrderId === viewingOrder._id
+                            ? "Syncing..."
+                            : "Refresh tracking"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {/* Customer Information */}
                 <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 mb-6 sm:mb-8">
                   <h4 className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">
@@ -1048,8 +1197,8 @@ export default function OrdersClient({
                             src={item.image}
                             className="object-cover"
                             alt={item.name}
-                            width={64}
-                            height={64}
+                            fill
+                            sizes="(max-width: 640px) 48px, 64px"
                           />
                         </div>
                         <div className="flex-grow min-w-0">
@@ -1268,6 +1417,55 @@ export default function OrdersClient({
                     />
                   </div>
                 </div>
+
+                {trackingOrder && (
+                  <div className="mt-6 p-3 sm:p-4 bg-gray-50 border border-gray-100 rounded-xl flex flex-wrap items-center justify-between gap-2">
+                    <div className="text-[11px] text-gray-600">
+                      <span className="font-bold uppercase tracking-wider text-gray-400">
+                        Shiprocket:
+                      </span>{" "}
+                      <span className="font-bold">
+                        {trackingOrder.shiprocket?.status || "pending"}
+                      </span>
+                      {trackingOrder.shiprocket?.orderId && (
+                        <span className="ml-2 font-mono">
+                          #{trackingOrder.shiprocket.orderId}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      {(!trackingOrder.shiprocket?.orderId ||
+                        trackingOrder.shiprocket?.status === "failed") && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleShiprocketPush(trackingOrder._id)
+                          }
+                          disabled={srBusyOrderId === trackingOrder._id}
+                          className="bg-primary text-white px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                        >
+                          {srBusyOrderId === trackingOrder._id
+                            ? "Pushing..."
+                            : "Push to Shiprocket"}
+                        </button>
+                      )}
+                      {trackingOrder.shiprocket?.shipmentId && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleShiprocketRefresh(trackingOrder._id)
+                          }
+                          disabled={srBusyOrderId === trackingOrder._id}
+                          className="bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold disabled:opacity-50"
+                        >
+                          {srBusyOrderId === trackingOrder._id
+                            ? "Syncing..."
+                            : "Refresh"}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
                    <button

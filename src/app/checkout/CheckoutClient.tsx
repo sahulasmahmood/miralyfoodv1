@@ -83,58 +83,110 @@ export default function CheckoutClient({
 
   const itemsPrice = cartTotal;
 
-  // Get estimated delivery time for selected location
-  const getEstimatedDelivery = () => {
-    if (!initialShippingRates || !address.state) return null;
+  // Server-resolved shipping quote (handles Shiprocket live vs flat fallback)
+  const [shippingQuote, setShippingQuote] = useState<{
+    source: "flat" | "shiprocket";
+    rate: number | null;
+    estimatedDelivery?: string;
+    courierName?: string;
+    available: boolean;
+  } | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
 
-    let shippingLocation = "Other States";
-    if (address.state === "Tamil Nadu") {
-      shippingLocation = "Tamil Nadu";
-    } else if (address.state === "Puducherry") {
-      shippingLocation = "Puducherry";
-    }
-
-    const applicableRate = initialShippingRates.find(
-      (rate) => rate.location === shippingLocation
-    );
-
-    return applicableRate?.estimatedDelivery || null;
+  // Local flat-rate fallback used while the API has not yet responded
+  // (keeps the original UX of showing a price as soon as state changes).
+  const flatRateForState = (state: string) => {
+    if (!initialShippingRates || !state) return null;
+    let loc = "Other States";
+    if (state === "Tamil Nadu") loc = "Tamil Nadu";
+    else if (state === "Puducherry") loc = "Puducherry";
+    return initialShippingRates.find((r) => r.location === loc) || null;
   };
 
-  // Dynamic Shipping Price Logic - Location Based
-  const calculateShipping = () => {
-    if (appliedCoupon?.isFreeDelivery) return 0;
+  // Aggregate cart "shape" — any change in items, ids, or quantities triggers a refetch.
+  const cartShapeKey = cartItems
+    .map((it: any) => `${it._id || it.productId}:${it.qty}`)
+    .sort()
+    .join("|");
 
-    // Check if we have location-based shipping configured
-    if (initialShippingRates && initialShippingRates.length > 0 && address.state) {
-      // Map state to shipping location
-      let shippingLocation = "Other States";
-      if (address.state === "Tamil Nadu") {
-        shippingLocation = "Tamil Nadu";
-      } else if (address.state === "Puducherry") {
-        shippingLocation = "Puducherry";
-      }
-
-      const applicableRate = initialShippingRates.find(
-        (rate) => rate.location === shippingLocation
-      );
-
-      // If rate found for this location, return it (0 means free delivery)
-      if (applicableRate) return applicableRate.rate;
-
-      // If no rate found for this specific location, return null to indicate unavailable
-      return null;
+  // Fetch a quote when pincode/state/cart changes
+  useEffect(() => {
+    let cancelled = false;
+    const haveState = !!address.state;
+    const havePincode = address.pincode && address.pincode.length >= 6;
+    const haveItems = cartItems.length > 0;
+    if (!haveState || !haveItems) {
+      setShippingQuote(null);
+      return;
     }
+    // If pincode missing, fall back to local flat rate so UX is unchanged.
+    if (!havePincode) {
+      const flat = flatRateForState(address.state);
+      setShippingQuote(
+        flat
+          ? {
+              source: "flat",
+              rate: flat.rate,
+              estimatedDelivery: flat.estimatedDelivery,
+              available: true,
+            }
+          : { source: "flat", rate: null, available: false },
+      );
+      return;
+    }
+    setQuoteLoading(true);
+    fetch("/api/shiprocket/rates", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pincode: address.pincode,
+        state: address.state,
+        cod: paymentMethod === "cod",
+        declaredValue: itemsPrice,
+        items: cartItems.map((it: any) => ({
+          productId: it._id || it.productId,
+          qty: it.qty,
+        })),
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (cancelled) return;
+        setShippingQuote(data);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        const flat = flatRateForState(address.state);
+        setShippingQuote(
+          flat
+            ? {
+                source: "flat",
+                rate: flat.rate,
+                estimatedDelivery: flat.estimatedDelivery,
+                available: true,
+              }
+            : { source: "flat", rate: null, available: false },
+        );
+      })
+      .finally(() => {
+        if (!cancelled) setQuoteLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address.state, address.pincode, paymentMethod, cartShapeKey, itemsPrice]);
 
-    // If no state is selected, return null (shipping not calculated yet)
+  const calculateShipping = (): number | null => {
+    if (appliedCoupon?.isFreeDelivery) return 0;
+    if (shippingQuote && shippingQuote.available)
+      return shippingQuote.rate ?? null;
     return null;
   };
 
   const shippingPrice = calculateShipping();
   const discountAmount = appliedCoupon?.discount || 0;
-  const estimatedDelivery = getEstimatedDelivery();
-
-  // Check if shipping is available for selected location
+  const estimatedDelivery = shippingQuote?.estimatedDelivery || null;
   const isShippingAvailable = shippingPrice !== null;
 
   const totalPrice = Math.max(
@@ -822,7 +874,7 @@ export default function CheckoutClient({
                   </div>
 
                   {/* Shipping Progress Bar */}
-                  {shippingPrice > 0 && (
+                  {shippingPrice !== null && shippingPrice > 0 && (
                     <div className="pt-2 space-y-2">
                       <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-gray-400">
                         <span>Free Shipping Progress</span>

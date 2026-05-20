@@ -167,7 +167,7 @@ export async function PUT(req: Request) {
         image: imageUrl,
         description,
       },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     if (!updatedCategory) {

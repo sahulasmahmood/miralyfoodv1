@@ -255,7 +255,7 @@ export default function DashboardClient({
               <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">
                 Period Revenue
               </p>
-              <h3 className="text-xl sm:text-3xl font-serif font-black text-[#007D71]">
+              <h3 className="text-xl sm:text-3xl font-number font-black text-[#007D71]">
                 {formatCurrency(data.stats.revenue.current)}
               </h3>
               <p className="text-[8px] sm:text-[10px] text-gray-400 mt-2.5 flex items-center gap-1 font-medium italic">
@@ -287,7 +287,7 @@ export default function DashboardClient({
               <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">
                 New Transactions
               </p>
-              <h3 className="text-xl sm:text-3xl font-serif font-black text-[#007D71]">
+              <h3 className="text-xl sm:text-3xl font-number font-black text-[#007D71]">
                 {data.stats.orders.current}
               </h3>
               <div className="flex flex-wrap gap-2 mt-2.5">
@@ -323,7 +323,7 @@ export default function DashboardClient({
               <p className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 leading-none">
                 Active Catalog
               </p>
-              <h3 className="text-xl sm:text-3xl font-serif font-black text-[#007D71]">
+              <h3 className="text-xl sm:text-3xl font-number font-black text-[#007D71]">
                 {data.stats.products.total}
               </h3>
               <div className="flex flex-wrap gap-2 mt-2.5">
@@ -356,7 +356,7 @@ export default function DashboardClient({
               <p className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
                 Customer Base
               </p>
-              <h3 className="text-2xl sm:text-3xl font-serif font-black text-[#007D71]">
+              <h3 className="text-2xl sm:text-3xl font-number font-black text-[#007D71]">
                 {data.stats.customers.total}
               </h3>
               <p className="text-[9px] sm:text-[10px] text-emerald-600 mt-2 font-bold flex items-center gap-1">
@@ -429,7 +429,7 @@ export default function DashboardClient({
                             {payload[0].payload.fullDate ||
                               payload[0].payload.date}
                           </p>
-                          <div className="space-y-2 font-serif">
+                          <div className="space-y-2 font-number">
                             <div className="flex flex-col">
                               <span className="text-white/50 text-[10px] uppercase font-bold tracking-widest">
                                 Revenue
@@ -525,7 +525,7 @@ export default function DashboardClient({
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">
                   Total
                 </p>
-                <p className="text-2xl font-serif font-black text-[#007D71]">
+                <p className="text-2xl font-number font-black text-[#007D71]">
                   {data.stats.orders.current}
                 </p>
               </div>
@@ -545,7 +545,7 @@ export default function DashboardClient({
                       {label}
                     </span>
                   </div>
-                  <span className="text-sm font-serif font-black text-[#007D71] pl-4">
+                  <span className="text-sm font-number font-black text-[#007D71] pl-4">
                     {value}
                   </span>
                 </div>
@@ -638,7 +638,7 @@ export default function DashboardClient({
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="bg-[#007D71] text-white px-4 py-2 rounded-2xl shadow-xl font-serif font-black text-xs">
+                        <div className="bg-[#007D71] text-white px-4 py-2 rounded-2xl shadow-xl font-number font-black text-xs">
                           {formatCurrency(payload[0].value as number)}
                         </div>
                       );
@@ -729,7 +729,7 @@ export default function DashboardClient({
                       {order.paymentMethod}
                     </span>
                   </td>
-                  <td className="py-6 text-sm font-serif font-black text-[#007D71]">
+                  <td className="py-6 text-sm font-number font-black text-[#007D71]">
                     {formatCurrency(order.totalPrice)}
                   </td>
                   <td className="py-6">

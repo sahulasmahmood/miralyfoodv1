@@ -194,7 +194,7 @@ export default function ProductsClient({
               <p className="text-[7px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1 leading-none">
                 {kpi.label}
               </p>
-              <h3 className="text-sm sm:text-2xl font-serif font-black text-[#007D71] tabular-nums truncate">
+              <h3 className="text-sm sm:text-2xl font-number font-black text-[#007D71] tabular-nums truncate">
                 {kpi.value}
               </h3>
             </div>
@@ -413,8 +413,8 @@ export default function ProductsClient({
                         src={p.images[0]}
                         className="object-cover"
                         alt={p.name}
-                        width={80}
-                        height={80}
+                        fill
+                        sizes="(max-width: 640px) 64px, 80px"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[#007D71]/20">
@@ -455,7 +455,7 @@ export default function ProductsClient({
                         <p className="text-[8px] sm:text-[10px] font-black text-gray-300 uppercase tracking-widest mb-0.5 sm:mb-1">
                           Price
                         </p>
-                        <p className="text-sm sm:text-lg font-serif font-black text-[#007D71] tabular-nums">
+                        <p className="text-sm sm:text-lg font-number font-black text-[#007D71] tabular-nums">
                           ₹{minPrice}
                         </p>
                       </div>

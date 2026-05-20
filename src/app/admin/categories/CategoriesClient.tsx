@@ -84,10 +84,16 @@ export default function CategoriesClient({
       const json = await res.json();
       const subs = Array.isArray(json) ? json : [];
       setAllSubCategories(subs);
-      // Sync unique names from DB into the pool
-      const dbNames: string[] = [...new Set<string>(subs.map((s: any) => s.name as string))];
+      // Sync unique names from DB into the pool (skip empty/null names)
+      const dbNames: string[] = [
+        ...new Set<string>(
+          subs
+            .map((s: any) => (s.name as string)?.trim())
+            .filter((n: string) => !!n),
+        ),
+      ];
       setPool((prev) => {
-        const merged = [...prev];
+        const merged = prev.filter((n) => !!n && !!n.trim());
         dbNames.forEach((n) => { if (!merged.includes(n)) merged.push(n); });
         return merged;
       });
@@ -287,7 +293,7 @@ export default function CategoriesClient({
           <p className="font-bold text-gray-400 uppercase tracking-widest text-xs">Loading Configuration...</p>
         </div>
       ) : (
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}

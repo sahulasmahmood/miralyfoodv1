@@ -386,7 +386,7 @@ export default function ShippingManagementPage() {
                           <p className="text-[8px] sm:text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1.5 leading-none">
                             Shipping Charge
                           </p>
-                          <p className="text-lg sm:text-2xl font-serif font-black text-primary tabular-nums">
+                          <p className="text-lg sm:text-2xl font-number font-black text-primary tabular-nums">
                             {rate.rate === 0 ? (
                               <span className="text-green-600 flex items-center gap-1">
                                 FREE

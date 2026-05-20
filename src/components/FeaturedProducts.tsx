@@ -115,13 +115,12 @@ export default function FeaturedProducts({
                       fill={isInWishlist(product._id) ? "currentColor" : "none"}
                     />
                   </button>
-                  <Link
-                    href={`/shop/${product.slug}`}
-                    className="bg-white p-2 rounded-full text-text-body hover:bg-primary hover:text-white transition-colors shadow-sm"
+                  <span
+                    className="bg-white p-2 rounded-full text-text-body group-hover:bg-primary group-hover:text-white transition-colors shadow-sm"
                     aria-label="Quick view"
                   >
                     <Eye size={18} />
-                  </Link>
+                  </span>
                 </div>
 
               </Link>

@@ -35,6 +35,7 @@ import FormError from "@/components/FormError";
 const TABS = [
   { id: "brand", label: "Brand Identity", icon: Store },
   { id: "payment", label: "Payment Gateway", icon: CreditCard },
+  { id: "shipping", label: "Shipping", icon: Truck },
   { id: "email", label: "Email Config", icon: Mail },
   { id: "seo", label: "SEO & Metadata", icon: Search },
   { id: "reviews", label: "Google Reviews", icon: MessageSquare },
@@ -177,12 +178,71 @@ export default function SettingsClient({
     googleMyBusiness: initialSettings?.googleMyBusiness || {},
     googleMapEmbedUrl: initialSettings?.googleMapEmbedUrl || "",
     trackingCodes: initialSettings?.trackingCodes || {},
+    shiprocket: initialSettings?.shiprocket || {},
   }));
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [showRzpSecret, setShowRzpSecret] = useState(false);
   const [showSmtpPass, setShowSmtpPass] = useState(false);
+  const [showSrPassword, setShowSrPassword] = useState(false);
+  const [showSrWebhook, setShowSrWebhook] = useState(false);
+  const [srTesting, setSrTesting] = useState(false);
+  const [srPickupLocations, setSrPickupLocations] = useState<
+    Array<{ id: number; nickname: string; pincode: string; city: string }>
+  >([]);
+  const [webhookUrl, setWebhookUrl] = useState("");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWebhookUrl(`${window.location.origin}/api/shiprocket/webhook`);
+    }
+  }, []);
+
+  const handleSrTestConnection = async () => {
+    setSrTesting(true);
+    try {
+      const res = await fetch("/api/admin/shiprocket/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: settings.shiprocket?.email,
+          password: settings.shiprocket?.password,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(
+          `Connected. ${data.pickupLocationCount || 0} pickup location${
+            data.pickupLocationCount === 1 ? "" : "s"
+          } found.`,
+        );
+        if (data.pickupLocations) setSrPickupLocations(data.pickupLocations);
+      } else {
+        toast.error(data.error || "Connection failed");
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Connection failed");
+    } finally {
+      setSrTesting(false);
+    }
+  };
+
+  const loadSrPickupLocations = async () => {
+    try {
+      const res = await fetch("/api/admin/shiprocket/pickup-locations");
+      const data = await res.json();
+      if (res.ok && data.locations) setSrPickupLocations(data.locations);
+    } catch {
+      /* ignore — user can use Test connection to refresh */
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "shipping" && settings.shiprocket?.enabled) {
+      loadSrPickupLocations();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   // Sync settings when initialSettings prop changes
@@ -196,6 +256,7 @@ export default function SettingsClient({
       googleMyBusiness: initialSettings?.googleMyBusiness || {},
       googleMapEmbedUrl: initialSettings?.googleMapEmbedUrl || "",
       trackingCodes: initialSettings?.trackingCodes || {},
+      shiprocket: initialSettings?.shiprocket || {},
     });
   }, [initialSettings]);
 
@@ -212,6 +273,7 @@ export default function SettingsClient({
   const TAB_LABELS: Record<string, string> = {
     brand: "Brand Identity",
     payment: "Payment Gateway",
+    shipping: "Shipping",
     email: "Email Config",
     seo: "SEO & Metadata",
     reviews: "Google Reviews",
@@ -1191,6 +1253,376 @@ export default function SettingsClient({
                 </div>
 
                 <TabSaveButton saving={saving} onClick={() => handleSave("seo")} label="SEO & Metadata" />
+              </div>
+            </SettingsCard>
+          )}
+
+          {activeTab === "shipping" && (
+            <SettingsCard>
+              <CardHeader
+                icon={<Truck size={20} />}
+                title="Shiprocket Integration"
+                description="Connect your Shiprocket account. Orders are auto-pushed after payment; tracking is synced via webhook."
+              />
+              <div className="space-y-6">
+                <ToggleSwitch
+                  checked={!!settings.shiprocket?.enabled}
+                  onChange={() =>
+                    setSettings({
+                      ...settings,
+                      shiprocket: {
+                        ...settings.shiprocket,
+                        enabled: !settings.shiprocket?.enabled,
+                      },
+                    })
+                  }
+                  label="Enable Shiprocket"
+                  description="When off, no orders are pushed and rate calls fall back to flat rates."
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <FieldLabel>Shiprocket Email</FieldLabel>
+                    <input
+                      type="email"
+                      className={INPUT_CLASS}
+                      value={settings.shiprocket?.email || ""}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          shiprocket: {
+                            ...settings.shiprocket,
+                            email: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="account@example.com"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Shiprocket Password</FieldLabel>
+                    <div className="relative">
+                      <input
+                        type={showSrPassword ? "text" : "password"}
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.password || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              password: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="••••••••"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowSrPassword((v) => !v)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showSrPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      Encrypted at rest. Leave masked to keep existing value.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={handleSrTestConnection}
+                    disabled={srTesting || !settings.shiprocket?.email}
+                    className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-bold uppercase tracking-wide text-xs flex items-center gap-2 disabled:opacity-50"
+                  >
+                    {srTesting ? (
+                      <Loader2 className="animate-spin" size={14} />
+                    ) : (
+                      <ShieldCheck size={14} />
+                    )}
+                    Test Connection
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <FieldLabel>Pickup Location</FieldLabel>
+                    {srPickupLocations.length > 0 ? (
+                      <select
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.pickupLocation || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              pickupLocation: e.target.value,
+                              pickupPincode:
+                                srPickupLocations.find(
+                                  (l) => l.nickname === e.target.value,
+                                )?.pincode || settings.shiprocket?.pickupPincode || "",
+                            },
+                          })
+                        }
+                      >
+                        <option value="">Select pickup location</option>
+                        {srPickupLocations.map((loc) => (
+                          <option key={loc.id} value={loc.nickname}>
+                            {loc.nickname} — {loc.city} ({loc.pincode})
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.pickupLocation || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              pickupLocation: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="Primary"
+                      />
+                    )}
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      Click "Test Connection" to load locations from your account.
+                    </p>
+                  </div>
+                  <div>
+                    <FieldLabel>Pickup Pincode</FieldLabel>
+                    <input
+                      type="text"
+                      className={INPUT_CLASS}
+                      value={settings.shiprocket?.pickupPincode || ""}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          shiprocket: {
+                            ...settings.shiprocket,
+                            pickupPincode: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="625006"
+                    />
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      Used for serviceability rate calls.
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <FieldLabel>Rate Calculation Mode</FieldLabel>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                    {[
+                      {
+                        value: "flat",
+                        label: "Flat state-based rates",
+                        desc: "Use the existing per-state shipping rates table. Reliable and free.",
+                      },
+                      {
+                        value: "shiprocket",
+                        label: "Live Shiprocket rates",
+                        desc: "Real-time courier rates based on pincode + weight. Falls back to flat rates on error.",
+                      },
+                    ].map((opt) => {
+                      const selected =
+                        (settings.shiprocket?.rateMode || "flat") === opt.value;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() =>
+                            setSettings({
+                              ...settings,
+                              shiprocket: {
+                                ...settings.shiprocket,
+                                rateMode: opt.value,
+                              },
+                            })
+                          }
+                          className={`text-left p-4 rounded-xl border-2 transition-colors ${
+                            selected
+                              ? "border-primary bg-primary/5"
+                              : "border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="font-bold text-sm text-gray-900">
+                            {opt.label}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {opt.desc}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <FieldLabel>Default Package Dimensions</FieldLabel>
+                  <p className="text-[10px] text-gray-400 mb-2">
+                    Used when a product has no shipping dimensions of its own.
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    <div>
+                      <span className="text-[10px] text-gray-500 font-semibold">
+                        Weight (kg)
+                      </span>
+                      <input
+                        type="number"
+                        step="0.001"
+                        min="0"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.defaultWeight ?? 0.5}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              defaultWeight: parseFloat(e.target.value) || 0,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-500 font-semibold">
+                        Length (cm)
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.defaultLength ?? 15}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              defaultLength: parseFloat(e.target.value) || 0,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-500 font-semibold">
+                        Breadth (cm)
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.defaultBreadth ?? 12}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              defaultBreadth: parseFloat(e.target.value) || 0,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-500 font-semibold">
+                        Height (cm)
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.defaultHeight ?? 5}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              defaultHeight: parseFloat(e.target.value) || 0,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-gray-500 font-semibold">
+                        HSN Code
+                      </span>
+                      <input
+                        type="text"
+                        className={INPUT_CLASS}
+                        value={settings.shiprocket?.defaultHsnCode || ""}
+                        onChange={(e) =>
+                          setSettings({
+                            ...settings,
+                            shiprocket: {
+                              ...settings.shiprocket,
+                              defaultHsnCode: e.target.value,
+                            },
+                          })
+                        }
+                        placeholder="e.g. 2103"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <FieldLabel>Webhook Secret</FieldLabel>
+                  <div className="relative">
+                    <input
+                      type={showSrWebhook ? "text" : "password"}
+                      className={INPUT_CLASS}
+                      value={settings.shiprocket?.webhookSecret || ""}
+                      onChange={(e) =>
+                        setSettings({
+                          ...settings,
+                          shiprocket: {
+                            ...settings.shiprocket,
+                            webhookSecret: e.target.value,
+                          },
+                        })
+                      }
+                      placeholder="A long random string"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowSrWebhook((v) => !v)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showSrWebhook ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-900">
+                    <p className="font-bold mb-1">Webhook setup</p>
+                    <p className="mb-2">
+                      In Shiprocket dashboard → Settings → API → Configure Webhooks,
+                      paste:
+                    </p>
+                    <code className="block bg-white px-2 py-1.5 rounded font-mono text-[11px] break-all">
+                      {webhookUrl || "https://your-domain/api/shiprocket/webhook"}
+                    </code>
+                    <p className="mt-2">
+                      Use the same secret here and in the Shiprocket dashboard.
+                    </p>
+                  </div>
+                </div>
+
+                <TabSaveButton
+                  saving={saving}
+                  onClick={() => handleSave("shipping")}
+                  label="Shipping"
+                />
               </div>
             </SettingsCard>
           )}

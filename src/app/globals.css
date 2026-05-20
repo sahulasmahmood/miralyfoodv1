@@ -24,6 +24,24 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.025em;
 }
 
+/* Admin pages prioritize readability — headings default to sans-serif inside admin.
+   Explicit `font-serif` classes still win and keep the decorative font for page titles. */
+.admin-root h1,
+.admin-root h2,
+.admin-root h3,
+.admin-root h4,
+.admin-root h5,
+.admin-root h6 {
+  font-family: var(--font-inter), "Inter", sans-serif;
+  letter-spacing: -0.01em;
+}
+.admin-root .font-serif {
+  font-family: var(--font-cormorant), "Cormorant Garamond", serif !important;
+}
+.admin-root .font-number {
+  font-family: var(--font-number), "Space Grotesk", sans-serif !important;
+}
+
 /* Number font — Space Grotesk for clean, professional numbers */
 .font-number,
 .tabular-nums {

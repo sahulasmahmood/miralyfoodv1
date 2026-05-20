@@ -28,7 +28,12 @@ export default function TiptapEditor({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // StarterKit ships with Link + Underline by default — disable them so we
+      // can register our own configured versions below without duplicate names.
+      StarterKit.configure({
+        link: false,
+        underline: false,
+      } as any),
       Underline,
       Link.configure({
         openOnClick: false,

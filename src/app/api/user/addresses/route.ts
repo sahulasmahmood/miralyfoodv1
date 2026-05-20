@@ -74,7 +74,7 @@ export async function POST(req: Request) {
           },
         },
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     return NextResponse.json(user?.savedAddresses || []);
@@ -113,7 +113,7 @@ export async function PUT(req: Request) {
           "savedAddresses.$.state": state,
         },
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     return NextResponse.json(user?.savedAddresses || []);
@@ -139,7 +139,7 @@ export async function DELETE(req: Request) {
     const user = await User.findByIdAndUpdate(
       session.user.id,
       { $pull: { savedAddresses: { _id: addressId } } },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     return NextResponse.json(user?.savedAddresses || []);

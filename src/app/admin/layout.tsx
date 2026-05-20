@@ -121,7 +121,7 @@ function AdminLayoutInner({
   ];
 
   return (
-    <div className="flex h-screen bg-[#F5F5F5] font-sans overflow-hidden">
+    <div className="admin-root flex h-screen bg-[#F5F5F5] font-sans overflow-hidden">
       <Toaster
         position="top-right"
         toastOptions={{

@@ -96,6 +96,23 @@ const SettingsSchema = new Schema(
       headCode: { type: String, default: "" },  // Code injected inside <head>
       bodyStartCode: { type: String, default: "" },  // Code injected after <body>
     },
+    shiprocket: {
+      enabled: { type: Boolean, default: false },
+      email: { type: String, default: "" },
+      password: { type: String, default: "" },
+      apiToken: { type: String, default: "" },
+      apiTokenExpiresAt: { type: Date },
+      pickupLocation: { type: String, default: "Primary" },
+      channelId: { type: String, default: "" },
+      webhookSecret: { type: String, default: "" },
+      rateMode: { type: String, enum: ["shiprocket", "flat"], default: "flat" },
+      defaultWeight: { type: Number, default: 0.5 },
+      defaultLength: { type: Number, default: 15 },
+      defaultBreadth: { type: Number, default: 12 },
+      defaultHeight: { type: Number, default: 5 },
+      defaultHsnCode: { type: String, default: "" },
+      pickupPincode: { type: String, default: "" },
+    },
     whyChooseUs: {
       title: { type: String, default: "No Shortcuts.\nNo Compromises." },
       highlightWord: { type: String, default: "Compromises." },

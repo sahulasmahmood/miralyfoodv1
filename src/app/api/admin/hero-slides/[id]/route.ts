@@ -90,7 +90,7 @@ export async function PUT(
     }
 
     const slide = await HeroSlide.findByIdAndUpdate(id, updateData, {
-      new: true,
+      returnDocument: "after",
       runValidators: true,
     });
 

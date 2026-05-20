@@ -144,6 +144,24 @@ export async function POST(req: Request) {
     const createdOrder = await order.save();
     console.log(`Payment verified & order created: ${createdOrder._id}`);
 
+    // Fire-and-forget Shiprocket push. Never blocks order completion.
+    (async () => {
+      try {
+        const { pushOrderToShiprocket } = await import("@/lib/shiprocket");
+        const result = await pushOrderToShiprocket(createdOrder._id.toString());
+        if (!result.ok) {
+          console.warn(
+            `[shiprocket] push failed for order ${createdOrder._id}: ${result.code} ${result.message}`,
+          );
+        }
+      } catch (err: any) {
+        console.error(
+          `[shiprocket] push errored for order ${createdOrder._id}:`,
+          err?.message || err,
+        );
+      }
+    })();
+
     // Update coupon usage if applicable
     if (couponCode) {
       try {

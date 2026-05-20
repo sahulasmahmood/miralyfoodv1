@@ -236,8 +236,8 @@ export default function InventoryPage() {
                         src={p.images[0]}
                         className="object-cover group-hover:scale-110 transition-transform"
                         alt={p.name}
-                        width={64}
-                        height={64}
+                        fill
+                        sizes="64px"
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full text-gray-300">
@@ -266,7 +266,7 @@ export default function InventoryPage() {
                       <div
                         className={`flex items-center justify-start md:justify-end gap-1.5 sm:gap-2 ${isOutOfStock ? "text-red-500" : isLowStock ? "text-orange-500" : "text-emerald-600"}`}
                       >
-                        <span className="font-black text-lg sm:text-2xl font-serif tabular-nums">
+                        <span className="font-black text-lg sm:text-2xl font-number tabular-nums">
                           {totalStock}
                         </span>
                         <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest opacity-40">
@@ -366,7 +366,7 @@ export default function InventoryPage() {
                               </div>
                               <div className="text-right shrink-0">
                                 <span
-                                  className={`text-lg sm:text-2xl font-serif font-black tabular-nums ${v.stock <= threshold ? "text-red-500" : "text-[#007D71]"}`}
+                                  className={`text-lg sm:text-2xl font-number font-black tabular-nums ${v.stock <= threshold ? "text-red-500" : "text-[#007D71]"}`}
                                 >
                                   {v.stock || 0}
                                 </span>
@@ -476,7 +476,7 @@ export default function InventoryPage() {
                                 setQuantity(Number(e.target.value))
                               }
                               placeholder="0"
-                              className={`w-full bg-white p-3 sm:p-4 rounded-xl shadow-sm text-base sm:text-lg font-bold text-[#007D71] outline-none transition-shadow font-serif focus-visible:ring-2 focus-visible:ring-[#C4743F]/50 touch-manipulation tabular-nums ${fieldErrors.quantity ? "ring-2 ring-red-300" : ""}`}
+                              className={`w-full bg-white p-3 sm:p-4 rounded-xl shadow-sm text-base sm:text-lg font-bold text-[#007D71] outline-none transition-shadow font-number focus-visible:ring-2 focus-visible:ring-[#C4743F]/50 touch-manipulation tabular-nums ${fieldErrors.quantity ? "ring-2 ring-red-300" : ""}`}
                             />
                             <FormError message={fieldErrors.quantity} />
                           </div>
@@ -618,7 +618,7 @@ export default function InventoryPage() {
                               </div>
                             </div>
                             <span
-                              className={`text-sm sm:text-lg font-serif font-black tabular-nums ${tx.quantity > 0 ? "text-green-600" : "text-red-500"}`}
+                              className={`text-sm sm:text-lg font-number font-black tabular-nums ${tx.quantity > 0 ? "text-green-600" : "text-red-500"}`}
                             >
                               {tx.quantity > 0 ? "+" : ""}
                               {tx.quantity}

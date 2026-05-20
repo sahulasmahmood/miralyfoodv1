@@ -34,6 +34,12 @@ export default function ProductModal({
     isFeatured: false,
     variants: [] as any[],
     images: [] as any[], // Allow strings or Files
+    sku: "",
+    hsnCode: "",
+    weight: "" as any,
+    length: "" as any,
+    breadth: "" as any,
+    height: "" as any,
     seo: {
       metaTitle: "",
       metaDescription: "",
@@ -110,6 +116,12 @@ export default function ProductModal({
         isFeatured: product.isFeatured || false,
         variants: product.variants || [],
         images: product.images || [],
+        sku: product.sku || "",
+        hsnCode: product.hsnCode || "",
+        weight: product.weight ?? "",
+        length: product.length ?? "",
+        breadth: product.breadth ?? "",
+        height: product.height ?? "",
         seo: product.seo || {
           metaTitle: "",
           metaDescription: "",
@@ -128,6 +140,12 @@ export default function ProductModal({
         isFeatured: false,
         variants: [],
         images: [],
+        sku: "",
+        hsnCode: "",
+        weight: "",
+        length: "",
+        breadth: "",
+        height: "",
         seo: {
           metaTitle: "",
           metaDescription: "",
@@ -226,10 +244,25 @@ export default function ProductModal({
       (img) => typeof img !== "string",
     ) as File[];
 
+    // Coerce empty shipping fields so MongoDB doesn't store "" / NaN
+    // (SKU has a sparse unique index — empty string would collide)
+    const cleanedShipping = {
+      sku: formData.sku?.trim() || undefined,
+      hsnCode: formData.hsnCode?.trim() || undefined,
+      weight: formData.weight === "" ? undefined : Number(formData.weight),
+      length: formData.length === "" ? undefined : Number(formData.length),
+      breadth: formData.breadth === "" ? undefined : Number(formData.breadth),
+      height: formData.height === "" ? undefined : Number(formData.height),
+    };
+
     // append metadata as JSON string for easy parsing on backend
     data.append(
       "data",
-      JSON.stringify({ ...formData, images: existingImages }),
+      JSON.stringify({
+        ...formData,
+        ...cleanedShipping,
+        images: existingImages,
+      }),
     );
 
     // append files
@@ -616,6 +649,107 @@ export default function ProductModal({
                     <p className="text-[10px] text-[#8a6d2b] font-bold leading-relaxed uppercase tracking-wide">
                       Pricing updates sync immediately.
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Shipping Section */}
+              <div className="mt-12 pt-8 border-t border-gray-100">
+                <h3 className="text-sm font-black uppercase tracking-widest text-[#C4743F] mb-2">
+                  Shipping Dimensions
+                </h3>
+                <p className="text-[10px] text-gray-400 mb-6 ml-1">
+                  Used by Shiprocket. Leave blank to use the global defaults from Shipping settings.
+                </p>
+                <div className="bg-[#F5F5F5] rounded-[32px] p-8 grid grid-cols-2 md:grid-cols-6 gap-6">
+                  <div className="space-y-2 col-span-2 md:col-span-1">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      SKU
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.sku}
+                      onChange={(e) =>
+                        setFormData({ ...formData, sku: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="MF-001"
+                    />
+                  </div>
+                  <div className="space-y-2 col-span-2 md:col-span-1">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      HSN Code
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.hsnCode}
+                      onChange={(e) =>
+                        setFormData({ ...formData, hsnCode: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="2103"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      Weight (kg)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.001"
+                      min="0"
+                      value={formData.weight}
+                      onChange={(e) =>
+                        setFormData({ ...formData, weight: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="0.5"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      Length (cm)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.length}
+                      onChange={(e) =>
+                        setFormData({ ...formData, length: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="15"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      Breadth (cm)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.breadth}
+                      onChange={(e) =>
+                        setFormData({ ...formData, breadth: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="12"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">
+                      Height (cm)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formData.height}
+                      onChange={(e) =>
+                        setFormData({ ...formData, height: e.target.value })
+                      }
+                      className="w-full bg-white border-none rounded-2xl py-4 px-4 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
+                      placeholder="5"
+                    />
                   </div>
                 </div>
               </div>

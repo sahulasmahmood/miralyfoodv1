@@ -23,6 +23,12 @@ const ProductSchema = new Schema({
     isActive: { type: Boolean, default: true },
     badge: { type: String },
     uom: { type: String, default: "pcs" }, // Legacy support
+    weight: { type: Number },
+    length: { type: Number },
+    breadth: { type: Number },
+    height: { type: Number },
+    hsnCode: { type: String },
+    sku: { type: String, index: true, sparse: true },
     seo: {
         metaTitle: { type: String },
         metaDescription: { type: String },

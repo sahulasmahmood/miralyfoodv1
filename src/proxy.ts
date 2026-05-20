@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export default function proxy(request: NextRequest) {
+  // Legacy/external bookmarks pointing to /categories — gracefully redirect to /shop
+  if (request.nextUrl.pathname === '/categories') {
+    return NextResponse.redirect(new URL('/shop', request.url), 308);
+  }
+
   if (request.nextUrl.pathname.startsWith('/api/')) {
     const origin = request.headers.get('origin');
 

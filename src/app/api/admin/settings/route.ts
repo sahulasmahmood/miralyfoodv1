@@ -48,6 +48,14 @@ export async function GET() {
       if (masked.smtp?.password) masked.smtp.password = MASKED;
       if (masked.googleMyBusiness?.apiKey)
         masked.googleMyBusiness.apiKey = MASKED;
+      if (masked.shiprocket?.password) masked.shiprocket.password = MASKED;
+      if (masked.shiprocket?.webhookSecret)
+        masked.shiprocket.webhookSecret = MASKED;
+      // Never expose the cached Shiprocket auth token to the client
+      if (masked.shiprocket) {
+        delete masked.shiprocket.apiToken;
+        delete masked.shiprocket.apiTokenExpiresAt;
+      }
       return NextResponse.json(masked);
     }
 
@@ -218,6 +226,44 @@ export async function POST(req: Request) {
       }
     }
 
+    // --- Handle Shiprocket credentials ---
+    if (data.shiprocket) {
+      // Password: keep existing if masked, else encrypt + invalidate cached token
+      if (data.shiprocket.password) {
+        if (data.shiprocket.password === MASKED) {
+          data.shiprocket.password = existing?.shiprocket?.password;
+        } else {
+          data.shiprocket.password = encryptPassword(data.shiprocket.password);
+          // Force a fresh login on next API call
+          data.shiprocket.apiToken = "";
+          data.shiprocket.apiTokenExpiresAt = null;
+        }
+      }
+      // Webhook secret
+      if (data.shiprocket.webhookSecret) {
+        if (data.shiprocket.webhookSecret === MASKED) {
+          data.shiprocket.webhookSecret = existing?.shiprocket?.webhookSecret;
+        } else {
+          data.shiprocket.webhookSecret = encryptPassword(
+            data.shiprocket.webhookSecret,
+          );
+        }
+      }
+      // Never let the client write the cached token directly
+      delete data.shiprocket.apiToken;
+      delete data.shiprocket.apiTokenExpiresAt;
+      // Preserve the cached token if email didn't change
+      if (
+        existing?.shiprocket?.apiToken &&
+        existing?.shiprocket?.email === data.shiprocket.email &&
+        data.shiprocket.password === existing.shiprocket.password
+      ) {
+        data.shiprocket.apiToken = existing.shiprocket.apiToken;
+        data.shiprocket.apiTokenExpiresAt =
+          existing.shiprocket.apiTokenExpiresAt;
+      }
+    }
+
     // Safety net: never store base64 images in MongoDB
     if (data.logo && data.logo.startsWith("data:")) delete data.logo;
     if (data.logo2 && data.logo2.startsWith("data:")) delete data.logo2;
@@ -242,6 +288,13 @@ export async function POST(req: Request) {
     if (response.smtp?.password) response.smtp.password = MASKED;
     if (response.googleMyBusiness?.apiKey)
       response.googleMyBusiness.apiKey = MASKED;
+    if (response.shiprocket?.password) response.shiprocket.password = MASKED;
+    if (response.shiprocket?.webhookSecret)
+      response.shiprocket.webhookSecret = MASKED;
+    if (response.shiprocket) {
+      delete response.shiprocket.apiToken;
+      delete response.shiprocket.apiTokenExpiresAt;
+    }
 
     revalidatePublicData([CACHE_KEYS.SEO, CACHE_KEYS.NAVBAR, CACHE_KEYS.SETTINGS_PUBLIC]);
     revalidateTag("seo-settings", "default");

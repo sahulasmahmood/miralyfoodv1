@@ -27,7 +27,7 @@ export default function MobileNav() {
     return pathname?.startsWith(path);
   };
 
-  const profileHref = session
+  const profileHref = mounted && session
     ? session.user.role === "admin"
       ? "/admin/dashboard"
       : "/profile"

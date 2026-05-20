@@ -108,6 +108,29 @@ export async function POST(req: Request) {
     const createdOrder = await order.save();
     console.log("Order created:", createdOrder._id);
 
+    // Fire-and-forget Shiprocket push for COD orders.
+    // Razorpay orders are pushed from /api/payments/verify after payment success.
+    if (String(paymentMethod || "").toLowerCase().includes("cod")) {
+      (async () => {
+        try {
+          const { pushOrderToShiprocket } = await import("@/lib/shiprocket");
+          const result = await pushOrderToShiprocket(
+            createdOrder._id.toString(),
+          );
+          if (!result.ok) {
+            console.warn(
+              `[shiprocket] COD push failed for order ${createdOrder._id}: ${result.code} ${result.message}`,
+            );
+          }
+        } catch (err: any) {
+          console.error(
+            `[shiprocket] COD push errored for order ${createdOrder._id}:`,
+            err?.message || err,
+          );
+        }
+      })();
+    }
+
     // If coupon was used, increment usage count and track per-user usage
     if (couponCode) {
       try {
