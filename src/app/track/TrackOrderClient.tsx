@@ -95,19 +95,19 @@ export default function TrackOrderClient() {
     const currentStatus = order?.status || (order?.isDelivered ? "Delivered" : "Pending");
 
     return (
-        <main className="min-h-screen bg-gray-50/50 pb-20">
-            <div className="pt-40 max-w-5xl mx-auto px-4 sm:px-6">
+        <main className="bg-gray-50/50 pb-10 md:pb-20">
+            <div className="pt-28 md:pt-40 max-w-5xl mx-auto px-4 sm:px-6">
 
                 {/* Header Section */}
-                <div className="text-center mb-12">
+                <div className="text-center mb-6 md:mb-12">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6"
+                        className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-4 md:mb-6"
                     >
                         <Search size={14} /> Real-time Tracking
                     </motion.div>
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-primary-dark mb-4">Track Your Order</h1>
+                    <h1 className="text-3xl md:text-5xl font-serif font-bold text-primary-dark mb-3 md:mb-4">Track Your Order</h1>
                     <p className="text-gray-500 max-w-md mx-auto">
                         Enter your details below to see the current status of your delicious snacks.
                     </p>
@@ -116,7 +116,7 @@ export default function TrackOrderClient() {
                 {/* Search Form */}
                 <motion.div
                     layout
-                    className="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 mb-12 max-w-3xl mx-auto"
+                    className="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-primary/5 border border-gray-100 mb-6 md:mb-12 max-w-3xl mx-auto"
                 >
                     <form onSubmit={handleTrack} className="grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div className="md:col-span-2">
