@@ -60,7 +60,7 @@ export default function PromoSection() {
 
             <Link
               href="/shop"
-              className="btn-primary text-base md:text-lg group mt-2"
+              className="btn-primary text-base md:text-lg group mt-4"
             >
               SHOP NOW{" "}
               <ArrowRight
