@@ -8,6 +8,13 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+html {
+  /* Prevents rogue horizontal scroll on mobile from animated/absolute elements
+     (motion.div translate-x, blur circles, large hero images). `clip` is safer
+     than `hidden` because it doesn't break sticky positioning. */
+  overflow-x: clip;
+}
+
 body {
   color: #000000;
   background: #ffffff;
@@ -15,6 +22,7 @@ body {
   font-family: var(--font-inter), "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4, h5, h6 {
