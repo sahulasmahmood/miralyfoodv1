@@ -25,7 +25,8 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useNavbarData } from "@/context/NavbarDataContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { categoryToParam, categoryHref } from "@/lib/utils";
 
 export default function Navbar() {
   const { data: session } = authClient.useSession();
@@ -34,6 +35,7 @@ export default function Navbar() {
   const { settings, categories } = useNavbarData();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -52,6 +54,23 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Keep the header search dropdown in sync with the URL so a deep-linked
+  // /shop?category=rice-flour visit shows the correct option pre-selected.
+  // Also maps legacy encoded-name URLs (?category=Rice%20%26%20Flour) to the
+  // matching slug so old bookmarks still highlight the right option.
+  useEffect(() => {
+    if (pathname !== "/shop") return;
+    const urlValue = searchParams.get("category") || "";
+    if (!urlValue) {
+      setSearchCategory("");
+      return;
+    }
+    const match = categories.find(
+      (c: any) => categoryToParam(c) === urlValue || c.name === urlValue
+    );
+    setSearchCategory(match ? categoryToParam(match) : "");
+  }, [pathname, searchParams, categories]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -180,16 +199,21 @@ export default function Navbar() {
                 <select
                   value={searchCategory}
                   onChange={(e) => {
-                    setSearchCategory(e.target.value);
-                    if (e.target.value) {
-                      router.push(`/shop?category=${encodeURIComponent(e.target.value)}`);
-                    }
+                    const value = e.target.value;
+                    setSearchCategory(value);
+                    // Preserve any existing ?search= when switching category
+                    // (or picking "All Categories" to clear the category only).
+                    const params = new URLSearchParams(searchParams.toString());
+                    if (value) params.set("category", value);
+                    else params.delete("category");
+                    const qs = params.toString();
+                    router.push(`/shop${qs ? `?${qs}` : ""}`);
                   }}
                   className="px-4 py-2 text-text-body border-r border-gray-200 hidden lg:block bg-gray-50 text-sm cursor-pointer outline-none appearance-none pr-8 bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23555%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_0.5rem_center]"
                 >
                   <option value="">All Categories</option>
                   {categories.map((cat) => (
-                    <option key={cat._id} value={cat.name}>
+                    <option key={cat._id} value={categoryToParam(cat)}>
                       {cat.name}
                     </option>
                   ))}
@@ -306,7 +330,7 @@ export default function Navbar() {
               {categories.slice(0, 3).map((cat) => (
                 <li key={cat._id} className="group relative py-1">
                   <Link
-                    href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                    href={categoryHref(cat)}
                     className="hover:text-white/80 transition-colors cursor-pointer flex items-center gap-1 uppercase"
                   >
                     {cat.name}
@@ -433,7 +457,7 @@ export default function Navbar() {
                     className="pb-2 border-b border-gray-100 flex justify-between items-center"
                   >
                     <Link
-                      href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                      href={categoryHref(cat)}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {cat.name}

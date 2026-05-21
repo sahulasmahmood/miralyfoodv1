@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { categoryHref } from "@/lib/utils";
 
 export default function CategorySection({
   initialCategories,
@@ -34,7 +35,7 @@ export default function CategorySection({
               viewport={{ once: true }}
             >
               <Link
-                href={`/shop?category=${encodeURIComponent(cat.name)}`}
+                href={categoryHref(cat)}
                 className="flex flex-col items-center gap-4 group"
               >
                 <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-transparent group-hover:border-primary transition-all duration-300 shadow-md transform group-hover:scale-105">

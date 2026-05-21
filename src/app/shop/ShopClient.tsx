@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   Filter,
@@ -35,7 +35,20 @@ export default function ShopClient({
 }) {
   const searchParams = useSearchParams();
   const urlSearch = searchParams.get("search") || "";
-  const urlCategory = searchParams.get("category") || "All";
+  // URLs use category slugs (e.g. ?category=rice-flour). Convert to the
+  // category name for the in-memory filter, which matches on p.category === name.
+  // Fallback to the raw value preserves any legacy bookmarks that still use names.
+  const resolveCategory = useCallback(
+    (value: string) => {
+      if (!value) return "All";
+      const bySlug = initialCategories.find((c: any) => c.slug === value);
+      if (bySlug) return bySlug.name;
+      const byName = initialCategories.find((c: any) => c.name === value);
+      return byName ? byName.name : "All";
+    },
+    [initialCategories]
+  );
+  const urlCategory = resolveCategory(searchParams.get("category") || "");
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
@@ -61,11 +74,9 @@ export default function ShopClient({
   const itemsPerPage = 12;
 
   useEffect(() => {
-    const urlCategory = searchParams.get("category") || "All";
-    const urlSearch = searchParams.get("search") || "";
-    setActiveCategory(urlCategory);
-    setSearchQuery(urlSearch);
-  }, [searchParams]);
+    setActiveCategory(resolveCategory(searchParams.get("category") || ""));
+    setSearchQuery(searchParams.get("search") || "");
+  }, [searchParams, resolveCategory]);
 
   useEffect(() => {
     const fetchSubCategories = async () => {
