@@ -74,7 +74,7 @@ export default function ProductGallery({
               className="relative w-full h-full overflow-hidden"
             >
               <div
-                className={`w-full h-full transition-transform duration-200 ${
+                className={`relative w-full h-full transition-transform duration-200 ${
                   isZoomed ? "scale-[2.5]" : "scale-100"
                 }`}
                 style={

@@ -64,7 +64,12 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
                 {aboutUs.heroDescription ||
                   "Miraly Foods brings you premium quality food products, crafted with the finest ingredients and delivered fresh to your doorstep. We believe that great food starts with great ingredients — sourced responsibly, prepared with care."}
               </p>
-              <div className="flex flex-col gap-4">
+              {/* items-center on mobile shrinks rows to content width and
+                  centers them as a group (matches centered heading above);
+                  lg:items-start reverts to natural left-aligned list on
+                  desktop. text-left on each row overrides the inherited
+                  text-center so wrapped text reads naturally beside its icon. */}
+              <div className="flex flex-col gap-4 items-center lg:items-start">
                 {[
                   "Premium Quality Ingredients",
                   "No Artificial Preservatives",
@@ -77,10 +82,13 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-center gap-3 font-semibold text-text-heading"
+                    className="flex items-start gap-3 font-semibold text-text-heading text-left"
                   >
-                    <CheckCircle size={20} className="text-primary fill-primary/10" />
-                    {item}
+                    <CheckCircle
+                      size={20}
+                      className="text-primary fill-primary/10 shrink-0 mt-0.5"
+                    />
+                    <span>{item}</span>
                   </motion.div>
                 ))}
               </div>

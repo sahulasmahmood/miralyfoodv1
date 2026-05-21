@@ -561,7 +561,10 @@ export default function ShopClient({
                         className="group bg-white rounded-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300"
                       >
                         <div className="relative aspect-square overflow-hidden bg-gray-50">
-                          <Link href={`/shop/${p.slug || p._id}`}>
+                          <Link
+                            href={`/shop/${p.slug || p._id}`}
+                            className="absolute inset-0 block"
+                          >
                             <Image
                               src={
                                 p.images?.[0] ||
@@ -570,7 +573,7 @@ export default function ShopClient({
                               alt={p.name}
                               fill
                               sizes="(max-width: 768px) 50vw, 33vw"
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              className="object-cover transition-transform duration-500 group-hover:scale-110"
                               priority={idx < 4}
                             />
                           </Link>

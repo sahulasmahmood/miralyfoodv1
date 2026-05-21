@@ -60,12 +60,12 @@ export default async function LegalPage({ params }: PageProps) {
       <Navbar />
 
       {/* Hero Section */}
-      <div className="pt-44 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-accent/5">
+      <div className="pt-28 md:pt-44 pb-6 md:pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-accent/5">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-6">
-            <PageIcon className="text-primary" size={32} />
+          <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-white rounded-2xl shadow-lg mb-4 md:mb-6">
+            <PageIcon className="text-primary" size={28} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-primary-dark mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-primary-dark mb-3 md:mb-4">
             {page.title}
           </h1>
           {page.lastUpdated && (
@@ -85,34 +85,17 @@ export default async function LegalPage({ params }: PageProps) {
       </div>
 
       {/* Content Section */}
-      <div className="py-16 px-4 sm:px-6 lg:px-8">
+      <div className="py-8 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
 
 
-            {/* Content Body */}
-            <div className="p-8 md:p-12">
+            {/* Content Body — styled via .cms-prose rules in globals.css
+                (the prose-* classes don't take effect because the
+                @tailwindcss/typography plugin is not installed). */}
+            <div className="p-6 md:p-12">
               <div
-                className="prose prose-lg max-w-none
-                  prose-headings:text-primary-dark prose-headings:font-bold
-                  prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8 prose-h1:pb-3 prose-h1:border-b prose-h1:border-gray-200
-                  prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-8 prose-h2:flex prose-h2:items-center prose-h2:gap-2
-                  prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-6 prose-h3:text-primary
-                  prose-h4:text-lg prose-h4:mb-2 prose-h4:mt-4 prose-h4:font-semibold
-                  prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-p:text-base
-                  prose-ul:my-4 prose-ul:space-y-2
-                  prose-ol:my-4 prose-ol:space-y-2
-                  prose-li:text-gray-700 prose-li:leading-relaxed
-                  prose-li:marker:text-primary
-                  prose-strong:text-primary-dark prose-strong:font-semibold
-                  prose-a:text-accent prose-a:no-underline prose-a:font-medium hover:prose-a:underline hover:prose-a:text-accent/80
-                  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-gray-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg
-                  prose-code:text-primary prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
-                  prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:shadow-lg
-                  prose-table:border-collapse prose-table:w-full
-                  prose-th:bg-primary/10 prose-th:text-primary-dark prose-th:font-bold prose-th:p-3 prose-th:text-left
-                  prose-td:border prose-td:border-gray-200 prose-td:p-3
-                  prose-hr:border-gray-200 prose-hr:my-8"
+                className="cms-prose"
                 dangerouslySetInnerHTML={{ __html: page.content }}
               />
             </div>

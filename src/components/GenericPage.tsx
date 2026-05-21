@@ -51,10 +51,12 @@ export default async function GenericPageComponent({ slug }: { slug: string }) {
         </div>
       </div>
 
-      {/* Content Body */}
+      {/* Content Body — styled via .cms-prose rules in globals.css (avoids
+          @tailwindcss/typography dependency and JIT scanning quirks with
+          long arbitrary-selector class lists). */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-20 pb-16 md:pb-32">
         <div
-          className="prose prose-lg prose-headings:font-serif prose-headings:font-bold prose-headings:text-primary-dark prose-p:text-gray-600 prose-p:leading-relaxed prose-a:text-primary prose-strong:text-primary-dark whitespace-pre-wrap"
+          className="cms-prose"
           dangerouslySetInnerHTML={{ __html: page.content }}
         />
       </div>

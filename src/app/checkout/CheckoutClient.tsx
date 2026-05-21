@@ -826,7 +826,7 @@ export default function CheckoutClient({
                 <div className="space-y-4">
                   {cartItems.map((item, index) => (
                     <motion.div
-                      key={item._id}
+                      key={`${item._id}-${item.uom || "default"}`}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 + index * 0.1 }}
@@ -873,26 +873,54 @@ export default function CheckoutClient({
                     </span>
                   </div>
 
-                  {/* Shipping Progress Bar */}
-                  {shippingPrice !== null && shippingPrice > 0 && (
-                    <div className="pt-2 space-y-2">
-                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                        <span>Free Shipping Progress</span>
-                        <span>
-                          {Math.min(
-                            100,
-                            Math.round(
-                              (itemsPrice /
-                                (initialSettings.freeShippingThreshold ||
-                                  500)) *
-                              100,
-                            ),
-                          )}
-                          %
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                  {/* Free Shipping Progress — only render when a threshold is
+                      configured AND the user is currently paying for shipping.
+                      Shows: amount remaining, visual progress bar, percent. */}
+                  {shippingPrice !== null &&
+                    shippingPrice > 0 &&
+                    initialSettings.freeShippingThreshold > 0 &&
+                    (() => {
+                      const threshold = initialSettings.freeShippingThreshold;
+                      const remaining = Math.max(0, threshold - itemsPrice);
+                      const percent = Math.min(
+                        100,
+                        Math.round((itemsPrice / threshold) * 100)
+                      );
+                      return (
+                        <div className="pt-2 space-y-2">
+                          <div className="flex justify-between items-center text-xs">
+                            <span className="text-gray-600">
+                              Add{" "}
+                              <span className="font-bold text-primary">
+                                ₹{remaining.toLocaleString()}
+                              </span>{" "}
+                              more for{" "}
+                              <span className="font-bold text-primary">
+                                FREE shipping
+                              </span>
+                            </span>
+                            <span className="font-bold text-primary-dark text-[11px]">
+                              {percent}%
+                            </span>
+                          </div>
+                          <div
+                            className="h-1.5 bg-gray-100 rounded-full overflow-hidden"
+                            role="progressbar"
+                            aria-valuenow={percent}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-label="Free shipping progress"
+                          >
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${percent}%` }}
+                              transition={{ duration: 0.5, ease: "easeOut" }}
+                              className="h-full bg-gradient-to-r from-primary to-primary-dark rounded-full"
+                            />
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                   <div className="flex justify-between text-sm items-center">
                     <span className="text-gray-600 flex items-center gap-2">
@@ -1128,7 +1156,10 @@ export default function CheckoutClient({
             >
               <div className="p-5 space-y-4 max-h-[60vh] overflow-y-auto">
                 {cartItems.map((item) => (
-                  <div key={item._id} className="flex justify-between text-sm">
+                  <div
+                    key={`${item._id}-${item.uom || "default"}`}
+                    className="flex justify-between text-sm"
+                  >
                     <span className="text-gray-600 line-clamp-1 flex-grow pr-4">
                       {item.name} x {item.qty}
                     </span>

@@ -30,6 +30,20 @@ h1, h2, h3, h4, h5, h6 {
   color: #000000;
   font-weight: 600;
   letter-spacing: -0.025em;
+  /* Cormorant Garamond defaults to old-style figures (3, 4, 5, 7, 9 sit
+     below the baseline) which looks broken in headings that contain numbers
+     like "Order #ABC1234", "1. Returns", year stamps, totals, etc.
+     Force modern lining numerals globally so all digits share the same
+     baseline and cap height across every heading in the app. */
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum";
+}
+
+/* Any explicit serif usage outside of headings (utility classes, .premium-heading,
+   inline font-serif on spans/divs) also needs lining numerals for the same reason. */
+.font-serif {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum";
 }
 
 /* Admin pages prioritize readability — headings default to sans-serif inside admin.
@@ -49,6 +63,62 @@ h1, h2, h3, h4, h5, h6 {
 .admin-root .font-number {
   font-family: var(--font-number), "Space Grotesk", sans-serif !important;
 }
+
+/* CMS prose — typography for CMS-rendered HTML (legal pages, FAQ, policies).
+   Force proper heading hierarchy regardless of what the TipTap editor outputs,
+   since @tailwindcss/typography is not installed. */
+.cms-prose {
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+@media (min-width: 768px) {
+  .cms-prose { font-size: 1.0625rem; }
+}
+.cms-prose h1,
+.cms-prose h2,
+.cms-prose h3,
+.cms-prose h4 {
+  font-family: var(--font-cormorant), "Cormorant Garamond", serif;
+  font-weight: 700;
+  color: #025D53; /* primary-dark token */
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  /* Cormorant Garamond defaults to old-style figures (3, 4, 5 sit below the
+     baseline) which looks inconsistent when numbers prefix a heading
+     ("3. Data Sharing"). Force modern lining numerals so all digits share
+     the same baseline and cap height. */
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum";
+}
+/* Sizes are deliberately large enough to dominate body text and create a
+   clear chapter-like hierarchy — needed because Tailwind's preflight resets
+   h1-h6 to font-size:inherit, so we have to drive the visual scale ourselves. */
+.cms-prose h1 { font-size: 2rem;    margin-top: 2.5rem; margin-bottom: 1rem; }
+.cms-prose h2 { font-size: 1.75rem; margin-top: 2.5rem; margin-bottom: 0.875rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(2,93,83,0.12); }
+.cms-prose h3 { font-size: 1.5rem;  margin-top: 2.25rem; margin-bottom: 0.75rem; }
+.cms-prose h4 { font-size: 1.25rem; margin-top: 1.75rem; margin-bottom: 0.5rem; }
+@media (min-width: 768px) {
+  .cms-prose h1 { font-size: 2.5rem; }
+  .cms-prose h2 { font-size: 2.25rem; }
+  .cms-prose h3 { font-size: 1.875rem; }
+  .cms-prose h4 { font-size: 1.5rem; }
+}
+/* <strong> inside a heading is redundant noise from the editor — collapse
+   its weight back to the heading's own so it doesn't double-bold. */
+.cms-prose h1 strong,
+.cms-prose h2 strong,
+.cms-prose h3 strong,
+.cms-prose h4 strong { font-weight: inherit; color: inherit; }
+.cms-prose > :first-child { margin-top: 0; }
+.cms-prose p { margin-bottom: 1rem; }
+.cms-prose strong { color: #025D53; font-weight: 600; }
+.cms-prose a { color: #007D71; text-decoration: underline; text-underline-offset: 2px; }
+.cms-prose a:hover { color: #025D53; }
+.cms-prose ul { list-style: disc; padding-left: 1.5rem; margin: 1rem 0; }
+.cms-prose ol { list-style: decimal; padding-left: 1.5rem; margin: 1rem 0; }
+.cms-prose li { margin-bottom: 0.25rem; }
+.cms-prose li::marker { color: #007D71; }
 
 /* Number font — Space Grotesk for clean, professional numbers */
 .font-number,
