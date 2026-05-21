@@ -130,9 +130,10 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en" className={cn("font-sans", geist.variable)} suppressHydrationWarning>
       <body
         className={`${inter.variable} ${cormorant.variable} ${spaceGrotesk.variable} font-sans antialiased text-text-body bg-white pb-16 lg:pb-0 print:pb-0`}
+        suppressHydrationWarning
       >
         {trackingCodes.headCode && (
           <TrackingScript code={trackingCodes.headCode} />

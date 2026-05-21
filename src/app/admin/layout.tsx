@@ -54,6 +54,11 @@ function AdminLayoutInner({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [settings, setSettings] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const sidebarCollapsed = isCollapsed || forceCollapsed;
 
@@ -80,7 +85,10 @@ function AdminLayoutInner({
     }
   }, [session, isPending, pathname, router]);
 
-  if (isPending) {
+  // Render the loading state on the server AND on initial client mount so SSR
+  // markup matches client hydration. After mount the real session-aware layout
+  // takes over via a normal re-render.
+  if (!mounted || isPending) {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#007D71]">
         <Loader2 className="animate-spin text-[#C4743F] mb-4" size={48} />
