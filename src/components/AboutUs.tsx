@@ -10,15 +10,15 @@ export default function AboutUs({ ourStory }: { ourStory?: any }) {
   // Use data from admin if available, else fallback
   const title = ourStory?.title || "Bringing the Authentic Taste of Madurai to Your Table.";
   const highlightWord = ourStory?.highlightWord || "Taste of Madurai";
-  const desc = ourStory?.description || "What started as a small family kitchen has grown into Madurai's most loved destination for premium sweets and savories. At Miraly Foods, we don't just bake; we craft memories using traditional wood-fired techniques and locally sourced, pure ingredients.";
+  const desc = ourStory?.description || "What started as a small family venture has grown into Madurai's most loved source for authentic spices and traditional masala blends. At Miraly Foods, we craft every product using time-tested methods and locally sourced, pure ingredients.";
   const image = ourStory?.image || "https://images.pexels.com/photos/3983674/pexels-photo-3983674.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
   const badge = ourStory?.yearsExcellence || "25+";
   const bullets = ourStory?.bullets && ourStory.bullets.length > 0 
     ? ourStory.bullets 
     : [
         "100% Natural Ingredients, No Preservatives",
-        "Traditional Wood-Fired Baking Methods",
-        "Daily Fresh Batches, Made with Love",
+        "Sun-Dried and Stone-Ground Spices",
+        "Small-Batch Production, Made with Care",
       ];
 
   // Helper to safely highlight word in title

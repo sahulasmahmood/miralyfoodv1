@@ -101,7 +101,7 @@ export default function OrderDetailsClient({
             <div className="bg-white p-5 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm">
               <h3 className="text-lg md:text-xl font-serif font-bold text-primary-dark mb-6 md:mb-8 flex items-center gap-3">
                 <Package className="text-primary" size={20} /> Purchased
-                Delicacies
+                Items
               </h3>
               <div className="space-y-6">
                 {order.orderItems.map((item: any, i: number) => (

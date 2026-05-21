@@ -44,11 +44,11 @@ const getCachedSeoSettings = unstable_cache(
 
 export async function generateMetadata(): Promise<Metadata> {
   const defaultMeta = {
-    title: "Miraly Foods | Authentic South Indian Delicacies",
+    title: "Miraly Foods | Authentic South Indian Spices & Masalas",
     description:
-      "Experience the magic of traditional sweets and savories crafted with love and the finest ingredients.",
+      "Pure, sun-dried spices and traditional masala blends crafted with care and the finest natural ingredients.",
     keywords:
-      "sweets, snacks, pickles, south indian food, authentic delicacies",
+      "spices, masala, turmeric, chilli powder, south indian food, authentic ingredients",
   };
 
   try {

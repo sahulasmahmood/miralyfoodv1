@@ -15,9 +15,9 @@ export default function CategorySection({
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-10 md:py-14 bg-gray-50">
       <div className="container-custom">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 md:mb-10">
           <h2 className="text-3xl md:text-4xl text-text-heading mb-4 inline-block relative italic">
             Shop By Category
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-accent rounded-full" />

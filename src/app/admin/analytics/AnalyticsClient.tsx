@@ -183,7 +183,7 @@ export default function AnalyticsClient({ initialData }: { initialData: any }) {
                 size={18}
                 className="text-primary sm:w-[20px] sm:h-[20px]"
               />{" "}
-              Top Delicacies
+              Top Products
             </h3>
             <span className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
               By Revenue

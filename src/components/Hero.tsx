@@ -94,8 +94,8 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-lg md:text-xl text-white/70 font-medium mb-12 leading-relaxed max-w-xl"
           >
-            Handpicked spices, traditional recipes, and pure ingredients —
-            delivered fresh from our kitchen to your doorstep.
+            Handpicked spices, authentic flavors, and pure ingredients —
+            delivered fresh to your doorstep.
           </motion.p>
 
           {/* CTA Buttons */}

@@ -34,7 +34,7 @@ export default function FreshBanner() {
       <div className="absolute inset-0 z-0">
         <Image
           src={banner}
-          alt="Freshly baked artisan bread"
+          alt="Authentic Indian spices and masalas"
           className="w-full h-full object-cover"
           fill
           sizes="100vw"
@@ -53,7 +53,7 @@ export default function FreshBanner() {
           Our Heritage
         </span>
         <h2 className="text-4xl md:text-6xl font-serif font-bold text-white mb-8 leading-tight">
-          Freshly Baked with <br />
+          Crafted Fresh with <br />
           <span className="italic">Traditional Recipes</span>
         </h2>
         <Link

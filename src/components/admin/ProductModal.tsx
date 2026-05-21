@@ -332,7 +332,7 @@ export default function ProductModal({
                         setFieldErrors(prev => ({ ...prev, name: "" }));
                       }}
                       className="w-full bg-[#F5F5F5] border-none rounded-2xl py-4 px-6 outline-none focus:ring-2 focus:ring-[#C4743F]/30 transition-all font-bold text-[#007D71] placeholder:text-gray-300"
-                      placeholder="e.g. Signature Red Velvet Cake"
+                      placeholder="e.g. Premium Turmeric Powder"
                     />
                     <FormError message={fieldErrors.name} />
                     <p className="text-[10px] text-gray-400 font-mono mt-1 ml-1 tracking-wider uppercase opacity-50">

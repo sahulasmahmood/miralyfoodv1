@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function PromoSection() {
   return (
-    <section className="py-20 relative overflow-hidden">
+    <section className="py-10 md:py-16 relative overflow-hidden">
       <div className="container-custom relative z-10">
         <div className="bg-brand-bg rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row items-stretch border border-primary/5">
           <motion.div

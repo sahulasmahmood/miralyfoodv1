@@ -321,7 +321,7 @@ export default function CheckoutClient({
           name: initialSettings?.shopName || "Miraly Foods",
           description:
             initialSettings?.seo?.metaDescription ||
-            "Authentic South Indian Delicacies",
+            "Authentic South Indian Spices & Masalas",
           order_id: rzpOrder.id,
           handler: async function (response: any) {
             // Payment succeeded — now create order + verify in one call

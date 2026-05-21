@@ -76,9 +76,9 @@ const SettingsSchema = new Schema(
       heroImage: { type: String, default: "https://images.pexels.com/photos/4134783/pexels-photo-4134783.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
       heroQuote: { type: String, default: "\"The secret ingredient is always love and a pinch of tradition.\"" },
       storyTitle: { type: String, default: "Crafting Memories,\nOne Batch at a Time." },
-      storyDescription: { type: String, default: "We don't just sell food; we serve the same love and purity that defined the heritage of our family kitchens." },
+      storyDescription: { type: String, default: "We don't just sell food; we deliver the same love and purity that defined the heritage of our family recipes." },
       journeyTitle: { type: String, default: "From Our Family To Yours." },
-      journeyDescription: { type: String, default: "Miraly Foods started as a small kitchen experiment by a family of food enthusiasts who couldn't find the authentic taste of home in store-bought products. Today, we've grown into a community of thousands who share the same love for traditional South Indian delicacies." },
+      journeyDescription: { type: String, default: "Miraly Foods started as a family venture by enthusiasts who couldn't find the authentic taste of home in store-bought masalas. Today, we've grown into a community of thousands who share the same love for pure, traditional South Indian spices and blends." },
       journeyImage1: { type: String, default: "https://images.pexels.com/photos/674483/pexels-photo-674483.jpeg?auto=compress&cs=tinysrgb&w=800" },
       journeyImage2: { type: String, default: "https://images.pexels.com/photos/1055271/pexels-photo-1055271.jpeg?auto=compress&cs=tinysrgb&w=800" },
       happyCustomers: { type: String, default: "10k+" },
@@ -87,10 +87,10 @@ const SettingsSchema = new Schema(
     ourStory: {
       title: { type: String, default: "Bringing the Authentic Taste of Madurai to Your Table." },
       highlightWord: { type: String, default: "Taste of Madurai" },
-      description: { type: String, default: "What started as a small family kitchen has grown into Madurai's most loved destination for premium sweets and savories. At Miraly Foods, we don't just bake; we craft memories using traditional wood-fired techniques and locally sourced, pure ingredients." },
+      description: { type: String, default: "What started as a small family venture has grown into Madurai's most loved source for authentic spices and traditional masala blends. At Miraly Foods, we craft every product using time-tested methods and locally sourced, pure ingredients." },
       image: { type: String, default: "https://images.pexels.com/photos/3983674/pexels-photo-3983674.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
       yearsExcellence: { type: String, default: "25+" },
-      bullets: [{ type: String, default: ["100% Natural Ingredients, No Preservatives", "Traditional Wood-Fired Baking Methods", "Daily Fresh Batches, Made with Love"] }]
+      bullets: [{ type: String, default: ["100% Natural Ingredients, No Preservatives", "Sun-Dried and Stone-Ground Spices", "Small-Batch Production, Made with Care"] }]
     },
     trackingCodes: {
       headCode: { type: String, default: "" },  // Code injected inside <head>
@@ -125,9 +125,9 @@ const SettingsSchema = new Schema(
       features: {
         type: [{ title: String, desc: String }],
         default: [
-          { title: "Traditional Recipes", desc: "Heritage bakes refined over 25 years. Our recipes are family heirlooms — not from a lab or an algorithm." },
-          { title: "Premium Ingredients", desc: "Stone-ground whole wheat, native millets, and farm-sourced jaggery. You'll taste the real difference." },
-          { title: "Wood-Fired Freshness", desc: "Baked in traditional wood-fired ovens every morning. From our kitchen to your table in hours, not days." }
+          { title: "Traditional Recipes", desc: "Heritage blends refined over 25 years. Our recipes are family heirlooms — not from a lab or an algorithm." },
+          { title: "Premium Ingredients", desc: "Sun-dried, stone-ground spices and farm-sourced raw materials. You'll taste the real difference." },
+          { title: "Authentic Freshness", desc: "Ground and packed in small batches to lock in aroma and flavor. From our facility to your kitchen in days, not months." }
         ]
       }
     },

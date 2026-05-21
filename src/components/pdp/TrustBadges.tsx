@@ -6,7 +6,7 @@ export default function TrustBadges() {
     const badges = [
         { icon: Leaf, label: "100% Organic", desc: "Certified ingredients", color: "green" },
         { icon: ShieldCheck, label: "Preservative Free", desc: "Pure & natural", color: "blue" },
-        { icon: Zap, label: "Freshly Baked", desc: "Made daily", color: "yellow" },
+        { icon: Zap, label: "Always Fresh", desc: "Small-batch packed", color: "yellow" },
         { icon: Truck, label: "Same Day Delivery", desc: "Fast & reliable", color: "purple" }
     ];
 

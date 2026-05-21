@@ -12,7 +12,7 @@ import {
   ShoppingCart,
   Minus,
   Plus,
-  ChefHat,
+  Sparkles,
   Leaf,
   Truck,
   Zap,
@@ -285,9 +285,9 @@ export default function ProductClient({
                     sublabel: "Certified ingredients",
                   },
                   {
-                    icon: ChefHat,
-                    label: "Handmade",
-                    sublabel: "Crafted with care",
+                    icon: Sparkles,
+                    label: "Handcrafted",
+                    sublabel: "Made with care",
                   },
                   {
                     icon: Truck,
@@ -333,7 +333,7 @@ export default function ProductClient({
               <div className="prose prose-sm max-w-none">
                 <p className="text-gray-700 leading-relaxed text-base">
                   {product.description ||
-                    "Our artisanal bakes are more than just food; they're a celebration of heritage and health. Every ingredient is scrutinized to ensure it meets our strict organic standards. Handcrafted with love and baked fresh daily to bring you the authentic taste of traditional recipes."}
+                    "Our authentic products are more than just food; they're a celebration of heritage and purity. Every ingredient is carefully selected to ensure it meets our strict quality standards. Crafted with care to bring you the genuine taste of traditional recipes."}
                 </p>
               </div>
 
@@ -359,10 +359,10 @@ export default function ProductClient({
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-primary-dark mb-1">
-                      Fresh Daily
+                      Always Fresh
                     </h4>
                     <p className="text-xs text-gray-600">
-                      Baked fresh every morning, delivered the same day
+                      Ground and packed in small batches for peak flavor
                     </p>
                   </div>
                 </div>

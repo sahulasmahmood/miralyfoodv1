@@ -17,16 +17,16 @@ const seedDefaults = async () => {
 
   const defaults = [
     {
-      title: "Freshly Baked",
-      titleAccent: "Cookies",
+      title: "Authentic South Indian",
+      titleAccent: "Spices",
       tag: "Bestseller",
-      description: "Irresistible homemade cookies baked fresh daily.",
+      description: "Pure, sun-dried spices and traditional masala blends.",
       image:
-        "https://images.pexels.com/photos/890577/pexels-photo-890577.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      ctaText: "Shop Cookies",
-      ctaLink: "/shop?category=Cookies",
-      badge1: "Freshly Baked",
-      badge2: "Premium Butter",
+        "https://images.pexels.com/photos/2802527/pexels-photo-2802527.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      ctaText: "Shop Spices",
+      ctaLink: "/shop",
+      badge1: "100% Natural",
+      badge2: "No Preservatives",
       order: 1,
       isActive: true,
     },

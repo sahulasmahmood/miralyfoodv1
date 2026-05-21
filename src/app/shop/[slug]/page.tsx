@@ -34,7 +34,7 @@ export async function generateMetadata({
   const description =
     product.seo?.metaDescription ||
     product.description?.substring(0, 160) ||
-    "Authentic South Indian Delicacies";
+    "Authentic South Indian Spices & Masalas";
   const keywords = product.seo?.keywords
     ? product.seo.keywords.split(",").map((k: string) => k.trim())
     : [];

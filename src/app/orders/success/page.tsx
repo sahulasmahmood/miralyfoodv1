@@ -31,7 +31,7 @@ export default function SuccessPage() {
                 >
                     <h1 className="text-5xl md:text-7xl font-serif font-bold text-primary-dark mb-6">Order Confirmed!</h1>
                     <p className="text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-12">
-                        Thank you for your order. We've received your payment and our chefs are already preparing your delicacies with love.
+                        Thank you for your order. We've received your payment and our team is packing your products with care.
                         {!session && (
                             <span className="block mt-4 text-sm bg-gray-50 p-4 rounded-xl border border-gray-100">
                                 Since you checked out as a guest, please save your Order ID (available in your email) to track your order.

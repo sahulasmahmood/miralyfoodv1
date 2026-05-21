@@ -1123,7 +1123,7 @@ export default function SettingsClient({
                         seo: { ...settings.seo, keywords: e.target.value },
                       })
                     }
-                    placeholder="bakery, cakes, cookies, sweets"
+                    placeholder="spices, masala, turmeric, chilli powder"
                   />
                   <p className="text-xs text-gray-500 mt-1.5">
                     Separate keywords with commas

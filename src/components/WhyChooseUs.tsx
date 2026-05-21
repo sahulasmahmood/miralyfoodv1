@@ -6,17 +6,17 @@ import Image from "next/image";
 const defaultFeatures = [
   {
     title: "Traditional Recipes",
-    desc: "Heritage bakes refined over 25 years. Our recipes are family heirlooms — not from a lab or an algorithm.",
+    desc: "Heritage blends refined over 25 years. Our recipes are family heirlooms — not from a lab or an algorithm.",
     num: "01",
   },
   {
     title: "Premium Ingredients",
-    desc: "Stone-ground whole wheat, native millets, and farm-sourced jaggery. You'll taste the real difference.",
+    desc: "Sun-dried, stone-ground spices and farm-sourced raw materials. You'll taste the real difference.",
     num: "02",
   },
   {
-    title: "Wood-Fired Freshness",
-    desc: "Baked in traditional wood-fired ovens every morning. From our kitchen to your table in hours, not days.",
+    title: "Authentic Freshness",
+    desc: "Ground and packed in small batches to lock in aroma and flavor. From our facility to your kitchen in days, not months.",
     num: "03",
   },
 ];

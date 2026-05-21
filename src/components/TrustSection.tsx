@@ -26,9 +26,9 @@ const FEATURES = [
 
 export default function TrustSection() {
   return (
-    <section className="py-20 relative bg-brand-bg/30">
+    <section className="py-10 md:py-16 relative bg-brand-bg/30">
       <div className="container-custom">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl text-text-heading mb-4 inline-block relative font-serif italic">
             Why Shop with Miraly Foods?
             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
