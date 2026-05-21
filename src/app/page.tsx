@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import HeroCarousel from "@/components/HeroCarousel";
-import BrandAbout from "@/components/BrandAbout";
 import CategorySection from "@/components/CategorySection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import TrustSection from "@/components/TrustSection";
@@ -41,8 +40,6 @@ export default function Home() {
       >
         <HeroSection />
       </Suspense>
-
-      <BrandAbout />
 
       <Suspense
         fallback={<div className="h-96 bg-white animate-pulse" />}
