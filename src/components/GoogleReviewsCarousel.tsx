@@ -68,7 +68,7 @@ export default function GoogleReviewsCarousel() {
   const reviews = data.reviews;
 
   return (
-    <section className="py-10 md:py-16 bg-primary-dark relative overflow-hidden text-white">
+    <section className="py-6 md:py-16 bg-primary-dark relative overflow-hidden text-white">
       <div className="container-custom relative z-10">
         <div className="flex flex-col items-center max-w-4xl mx-auto text-center">
           <Quote className="text-accent mb-8 opacity-50" size={64} />

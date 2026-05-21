@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function BeforeAfter() {
   return (
-    <section className="py-10 md:py-16 relative overflow-hidden bg-white">
+    <section className="py-6 md:py-16 relative overflow-hidden bg-white">
       <div className="container-custom relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-10 md:gap-16">
           <motion.div

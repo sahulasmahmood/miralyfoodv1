@@ -26,7 +26,7 @@ const FEATURES = [
 
 export default function TrustSection() {
   return (
-    <section className="py-10 md:py-16 relative bg-brand-bg/30">
+    <section className="py-6 md:py-16 relative bg-brand-bg/30">
       <div className="container-custom">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl text-text-heading mb-4 inline-block relative font-serif italic">

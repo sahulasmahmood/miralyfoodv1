@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function BannerRow() {
   return (
-    <section className="py-10 md:py-16">
+    <section className="py-6 md:py-16">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Banner 1 */}
