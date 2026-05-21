@@ -9,7 +9,7 @@ export default function Footer() {
   const { settings } = useNavbarData();
 
   return (
-    <footer className="bg-primary text-white pt-16 pb-8 print:hidden">
+    <footer className="bg-primary text-white pt-10 md:pt-16 pb-6 md:pb-8 print:hidden">
       <div className="container-custom">
         {/* Google Map */}
         {settings?.googleMapEmbedUrl && (() => {
@@ -18,22 +18,21 @@ export default function Footer() {
           if (srcMatch) mapSrc = srcMatch[1];
           if (!mapSrc.startsWith("https://")) return null;
           return (
-            <div className="mb-12 rounded-lg overflow-hidden">
+            <div className="mb-6 md:mb-12 rounded-lg overflow-hidden">
               <iframe
                 src={mapSrc}
-                width="100%"
-                height="300"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Store Location"
+                className="w-full h-[200px] md:h-[300px]"
               />
             </div>
           );
         })()}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 mb-8 md:mb-16">
           {/* Brand Info */}
           <div className="flex flex-col gap-6">
             <Link href="/" className="flex items-center gap-1">
@@ -193,7 +192,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/70">
+        <div className="border-t border-white/20 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/70">
           <p>
             &copy; {new Date().getFullYear()} Miraly Foods. All Rights Reserved.
           </p>

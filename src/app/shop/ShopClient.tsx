@@ -445,9 +445,9 @@ export default function ShopClient({
                 of {filteredProducts.length} results
               </div>
 
-              <div className="flex items-center gap-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-bold text-text-heading uppercase">
+              <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 w-full md:w-auto">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <span className="text-sm font-bold text-text-heading uppercase hidden sm:block">
                     Sort by:
                   </span>
                   <div className="relative">
@@ -473,7 +473,7 @@ export default function ShopClient({
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 border-l border-gray-200 pl-6">
+                <div className="flex items-center gap-2 border-l border-gray-200 pl-3 md:pl-6">
                   <span className="text-sm font-bold text-text-heading uppercase hidden sm:block">
                     View:
                   </span>

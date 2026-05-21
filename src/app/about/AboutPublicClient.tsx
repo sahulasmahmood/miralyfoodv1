@@ -45,9 +45,9 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
       </section>
 
       {/* Our Story Section */}
-      <section className="py-20">
+      <section className="py-10 md:py-20">
         <div className="container-custom">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -104,9 +104,9 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
       </section>
 
       {/* Values Section - matches homepage Features pattern */}
-      <section className="py-20 bg-brand-bg/30">
+      <section className="py-10 md:py-20 bg-brand-bg/30">
         <div className="container-custom">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-16">
             <h2 className="text-3xl md:text-4xl text-text-heading mb-4 inline-block relative font-serif italic">
               Why Choose Miraly Foods?
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
@@ -158,14 +158,17 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
       </section>
 
       {/* Journey Section */}
-      <section className="py-20">
+      <section className="py-10 md:py-20">
         <div className="container-custom">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
+          {/* flex-col-reverse on mobile keeps the heading/story above the images
+              (reader needs the "Our Journey" context before seeing the photos);
+              desktop uses the original images-left, text-right composition. */}
+          <div className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-16">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="flex-1 grid grid-cols-2 gap-4"
+              className="w-full flex-1 grid grid-cols-2 gap-4"
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg mt-8">
                 <Image
@@ -195,14 +198,14 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
               <span className="text-primary font-bold uppercase tracking-[0.3em] text-xs mb-4 block">
                 Our Journey
               </span>
-              <h2 className="text-4xl font-serif font-bold text-text-heading mb-8">
+              <h2 className="text-4xl font-serif font-bold text-text-heading mb-4 md:mb-8">
                 {aboutUs.journeyTitle || "From Our Family To Yours."}
               </h2>
-              <p className="text-lg text-text-body leading-relaxed mb-10">
+              <p className="text-lg text-text-body leading-relaxed mb-6 md:mb-10">
                 {aboutUs.journeyDescription ||
                   "Miraly Foods started with a simple mission — to bring premium quality food products to every household. Today, we've grown into a trusted name, serving thousands of happy customers across India."}
               </p>
-              <div className="grid grid-cols-2 gap-8 border-t border-gray-100 pt-10">
+              <div className="grid grid-cols-2 gap-8 border-t border-gray-100 pt-6 md:pt-10">
                 <div>
                   <p className="text-4xl font-bold text-primary mb-1">
                     {aboutUs.happyCustomers || "10k+"}
@@ -226,7 +229,7 @@ export default function AboutPublicClient({ initialAboutUs }: { initialAboutUs: 
       </section>
 
       {/* CTA Section - matches homepage pattern */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-10 md:py-20 bg-gray-50">
         <div className="container-custom text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

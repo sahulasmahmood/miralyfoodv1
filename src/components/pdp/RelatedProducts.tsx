@@ -72,8 +72,8 @@ export default function RelatedProducts({
 
   if (loading) {
     return (
-      <section className="py-24 border-t border-primary/5 mt-20">
-        <div className="flex justify-center items-center py-20">
+      <section className="py-10 md:py-24 border-t border-primary/5 mt-10 md:mt-20">
+        <div className="flex justify-center items-center py-10 md:py-20">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       </section>
@@ -85,8 +85,8 @@ export default function RelatedProducts({
   }
 
   return (
-    <section className="py-24 border-t border-primary/5 mt-20">
-      <div className="flex justify-between items-end mb-16">
+    <section className="py-10 md:py-24 border-t border-primary/5 mt-10 md:mt-20">
+      <div className="flex justify-between items-end mb-8 md:mb-16">
         <div>
           <span className="text-[10px] font-sans font-black uppercase tracking-[0.4em] text-primary mb-4 block">
             Complete your treat

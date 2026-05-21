@@ -136,8 +136,8 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <div className="container-custom py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="container-custom py-8 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
           {/* Contact Info */}
           <div className="lg:col-span-4 space-y-6">
             {contactInfos.map((item, i) => (
