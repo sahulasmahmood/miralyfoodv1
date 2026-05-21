@@ -79,6 +79,7 @@ export default function PromoSection() {
               fill
               className="object-contain object-center p-4"
               sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
             />
           </motion.div>
         </div>

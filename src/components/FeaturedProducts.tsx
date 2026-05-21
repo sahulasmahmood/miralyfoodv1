@@ -80,6 +80,7 @@ export default function FeaturedProducts({
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  priority={i < 2}
                 />
 
                 {/* Discount Badge */}

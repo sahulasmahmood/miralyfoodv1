@@ -114,7 +114,7 @@ export default function HeroCarousel({
           className="absolute inset-0 block"
         >
           {slide.ctaLink ? (
-            <Link href={slide.ctaLink} className="block w-full h-full">
+            <Link href={slide.ctaLink} className="relative block w-full h-full">
               <Image
                 src={getImageUrl(slide.image)}
                 alt={`${slide.title} ${slide.titleAccent}`}
