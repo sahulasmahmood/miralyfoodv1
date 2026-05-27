@@ -588,8 +588,8 @@ export default function ShopClient({
                             </div>
                           )}
 
-                          {/* Hover Actions */}
-                          <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                          {/* Hover Actions (always visible on mobile) */}
+                          <div className="absolute top-3 right-3 md:top-4 md:right-4 flex flex-col gap-2 opacity-100 translate-x-0 md:opacity-0 md:translate-x-4 transition-all duration-300 md:group-hover:opacity-100 md:group-hover:translate-x-0">
                             <button
                               onClick={(e) => {
                                 e.preventDefault();
@@ -615,7 +615,7 @@ export default function ShopClient({
                             </button>
                             <Link
                               href={`/shop/${p.slug || p._id}`}
-                              className="bg-white p-2 rounded-full text-text-body hover:bg-primary hover:text-white transition-colors shadow-sm"
+                              className="hidden md:flex items-center justify-center bg-white p-2 rounded-full text-text-body hover:bg-primary hover:text-white transition-colors shadow-sm"
                               aria-label="Quick view"
                             >
                               <Eye size={18} />

@@ -43,7 +43,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="w-full max-w-md bg-white h-full relative z-10 shadow-2xl flex flex-col"
           >
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center mt-20 bg-gradient-to-r from-primary/5 to-accent/5">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-primary/5 to-accent/5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-md">
                   <ShoppingBag className="text-white" size={20} />

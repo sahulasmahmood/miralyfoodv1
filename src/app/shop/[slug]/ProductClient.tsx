@@ -25,9 +25,11 @@ import {
   Share2,
   Package,
   Award,
+  Heart,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 import { useNavbarData } from "@/context/NavbarDataContext";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -51,8 +53,19 @@ export default function ProductClient({
   >("idle");
   const [deliveryDate, setDeliveryDate] = useState<string>("");
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const router = useRouter();
   const { data: session } = authClient.useSession();
+
+  const wishlisted = product ? isInWishlist(product._id) : false;
+  const toggleWishlist = () => {
+    if (!product) return;
+    if (wishlisted) {
+      removeFromWishlist(product._id);
+    } else {
+      addToWishlist(product);
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -100,7 +113,7 @@ export default function ProductClient({
     <main className="min-h-screen bg-gradient-to-b from-white to-secondary/30 selection:bg-primary selection:text-white">
       <Navbar />
 
-      <div className="pt-44 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="pt-4 md:pt-44 pb-10 md:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-[10px] font-bold text-gray-500 mb-8 uppercase tracking-wider">
           <a href="/" className="hover:text-primary transition-colors">
@@ -142,31 +155,50 @@ export default function ProductClient({
                 )}
               </div>
 
-              {/* Title & Share */}
+              {/* Title & Actions */}
               <div className="flex items-start justify-between gap-4">
                 <h1 className="text-3xl md:text-5xl font-serif font-bold text-primary-dark leading-tight">
                   {product.name}
                 </h1>
-                <button
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator
-                        .share({
-                          title: product.name,
-                          text: `Check out ${product.name} on Miraly Foods!`,
-                          url: window.location.href,
-                        })
-                        .catch(console.error);
-                    } else {
-                      navigator.clipboard.writeText(window.location.href);
-                      toast.success("Link copied to clipboard!");
-                    }
-                  }}
-                  className="p-3 bg-gray-100 hover:bg-primary hover:text-white rounded-xl text-gray-600 transition-all duration-300 flex-shrink-0"
-                  title="Share this product"
-                >
-                  <Share2 size={18} />
-                </button>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={toggleWishlist}
+                    aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    aria-pressed={wishlisted}
+                    title={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    className={`p-3 rounded-xl transition-all duration-300 ${
+                      wishlisted
+                        ? "bg-red-50 text-red-500 hover:bg-red-100"
+                        : "bg-gray-100 text-gray-600 hover:bg-primary hover:text-white"
+                    }`}
+                  >
+                    <Heart
+                      size={18}
+                      fill={wishlisted ? "currentColor" : "none"}
+                      strokeWidth={2}
+                    />
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator
+                          .share({
+                            title: product.name,
+                            text: `Check out ${product.name} on Miraly Foods!`,
+                            url: window.location.href,
+                          })
+                          .catch(console.error);
+                      } else {
+                        navigator.clipboard.writeText(window.location.href);
+                        toast.success("Link copied to clipboard!");
+                      }
+                    }}
+                    className="p-3 bg-gray-100 hover:bg-primary hover:text-white rounded-xl text-gray-600 transition-all duration-300"
+                    title="Share this product"
+                  >
+                    <Share2 size={18} />
+                  </button>
+                </div>
               </div>
 
 
@@ -422,6 +454,22 @@ export default function ProductClient({
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl p-4 z-[60] border-t border-gray-200 shadow-2xl">
         <div className="flex gap-3 items-center">
+          <button
+            onClick={toggleWishlist}
+            aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            aria-pressed={wishlisted}
+            className={`flex-shrink-0 p-3 rounded-xl border-2 transition-all duration-200 ${
+              wishlisted
+                ? "bg-red-50 border-red-200 text-red-500"
+                : "bg-white border-gray-200 text-gray-600"
+            }`}
+          >
+            <Heart
+              size={20}
+              fill={wishlisted ? "currentColor" : "none"}
+              strokeWidth={2}
+            />
+          </button>
           <div className="flex items-center gap-3 bg-gray-100 px-4 py-2 rounded-xl">
             <button
               onClick={() => setQty(Math.max(1, qty - 1))}

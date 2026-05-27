@@ -30,9 +30,9 @@ export default function FeaturedProducts({
   if (products.length === 0) return null;
 
   return (
-    <section className="py-6 md:py-16">
+    <section className="pt-2 pb-6 md:pt-8 md:pb-16">
       <div className="container-custom">
-        <div className="flex flex-row justify-between items-center mb-4 md:mb-10 gap-2">
+        <div className="flex flex-row justify-between items-center mb-3 md:mb-8 gap-2">
           <div>
             {subtitle && (
               <p className="text-accent font-medium mb-1 text-sm">{subtitle}</p>
@@ -93,8 +93,8 @@ export default function FeaturedProducts({
                   </div>
                 )}
 
-                {/* Hover Actions */}
-                <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 transform translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                {/* Hover Actions (always visible on mobile) */}
+                <div className="absolute top-3 right-3 md:top-4 md:right-4 flex flex-col gap-2 opacity-100 translate-x-0 md:opacity-0 md:translate-x-4 transition-all duration-300 md:group-hover:opacity-100 md:group-hover:translate-x-0">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -117,7 +117,7 @@ export default function FeaturedProducts({
                     />
                   </button>
                   <span
-                    className="bg-white p-2 rounded-full text-text-body group-hover:bg-primary group-hover:text-white transition-colors shadow-sm"
+                    className="hidden md:flex items-center justify-center bg-white p-2 rounded-full text-text-body group-hover:bg-primary group-hover:text-white transition-colors shadow-sm"
                     aria-label="Quick view"
                   >
                     <Eye size={18} />
@@ -156,7 +156,7 @@ export default function FeaturedProducts({
                 </button>
               </div>
 
-              <Link href={`/shop/${product.slug}`} className="block p-4 text-center">
+              <Link href={`/shop/${product.slug}`} className="block px-4 pt-3 pb-4 text-center">
                 {product.category && (
                   <p className="text-[10px] text-primary uppercase font-bold tracking-widest mb-1">
                     {typeof product.category === "object"
@@ -167,10 +167,10 @@ export default function FeaturedProducts({
                 <h3 className="text-sm font-sans font-semibold text-text-heading mb-2 line-clamp-1 group-hover:text-primary transition-colors">
                   {product.name}
                 </h3>
-                <p className="text-primary font-bold font-number">
+                <p className="text-primary font-extrabold font-number text-base md:text-lg leading-none">
                   ₹{product.price}
                   {product.mrp && product.mrp > product.price && (
-                    <span className="text-text-body/50 text-xs line-through ml-2 font-normal">
+                    <span className="text-text-body/50 text-xs md:text-sm line-through ml-2 font-medium">
                       ₹{product.mrp}
                     </span>
                   )}

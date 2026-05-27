@@ -150,39 +150,40 @@ export default function Navbar() {
             isScrolled ? "py-2 shadow-xl backdrop-blur-md bg-primary/95" : "py-2 md:py-4"
           }`}
         >
-          <div className="container-custom flex flex-wrap items-center justify-between gap-4">
+          <div className="container-custom flex flex-nowrap lg:flex-wrap items-center justify-between gap-2 sm:gap-4">
             {/* Logo + Mobile Menu */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 flex-shrink">
               <button
-                className="lg:hidden p-1"
+                className="lg:hidden p-1 flex-shrink-0"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Open menu"
               >
                 <Menu size={24} />
               </button>
-              <Link href="/" className="flex-shrink-0 flex items-center gap-0">
+              <Link href="/" className="flex-shrink min-w-0 flex items-center gap-0">
                 {settings?.logo ? (
-                  <div className="h-9 md:h-16 w-24 md:w-44 relative">
+                  <div className="h-9 md:h-16 w-20 sm:w-24 md:w-44 relative flex-shrink-0">
                     <Image
                       src={settings.logo}
                       alt={settings.shopName || "Miraly Foods"}
                       fill
-                      sizes="(max-width: 768px) 96px, 176px"
+                      sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, 176px"
                       className="object-contain object-left"
                       priority
                     />
                   </div>
                 ) : (
-                  <span className="text-xl md:text-2xl font-serif font-bold text-white">
+                  <span className="text-xl md:text-2xl font-serif font-bold text-white truncate">
                     {settings?.shopName || "Miraly Foods"}
                   </span>
                 )}
                 {settings?.logo2 && (
-                  <div className="h-9 md:h-16 w-24 md:w-44 relative flex-shrink-0">
+                  <div className="hidden sm:block h-9 md:h-16 w-16 sm:w-24 md:w-44 relative flex-shrink-0">
                     <Image
                       src={settings.logo2}
                       alt="Secondary Logo"
                       fill
-                      sizes="(max-width: 768px) 96px, 176px"
+                      sizes="(max-width: 640px) 64px, (max-width: 768px) 96px, 176px"
                       className="object-contain object-left"
                     />
                   </div>
@@ -250,47 +251,44 @@ export default function Navbar() {
                 </div>
               )}
 
-              <div className="flex items-center gap-2 md:gap-5">
-                {session ? (
-                  <Link
-                    href={
-                      session.user.role === "admin"
+              <div className="flex items-center gap-1 sm:gap-2 md:gap-3 -mr-2 md:mr-0">
+                <Link
+                  href={
+                    session
+                      ? session.user.role === "admin"
                         ? "/admin/dashboard"
                         : session.user.role === "customer"
                           ? "/profile"
                           : "/login"
-                    }
-                    className="hover:text-white/80 transition-colors"
-                  >
-                    <User size={20} className="md:w-6 md:h-6" />
-                  </Link>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="hover:text-white/80 transition-colors"
-                  >
-                    <User size={20} className="md:w-6 md:h-6" />
-                  </Link>
-                )}
+                      : "/login"
+                  }
+                  aria-label="Account"
+                  className="relative inline-flex items-center justify-center h-11 w-11 md:h-10 md:w-10 rounded-full hover:bg-white/10 active:bg-white/15 hover:text-white/90 transition-colors"
+                >
+                  <User size={24} className="md:w-6 md:h-6" strokeWidth={2} />
+                </Link>
                 <Link
                   href="/wishlist"
-                  className="hover:text-white/80 transition-colors relative"
+                  aria-label={`Wishlist${mounted && wishlistCount > 0 ? ` (${wishlistCount} items)` : ""}`}
+                  className="relative inline-flex items-center justify-center h-11 w-11 md:h-10 md:w-10 rounded-full hover:bg-white/10 active:bg-white/15 hover:text-white/90 transition-colors"
                 >
-                  <Heart size={20} className="md:w-6 md:h-6" />
-                  {mounted && (
-                    <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-                      {wishlistCount}
+                  <Heart size={24} className="md:w-6 md:h-6" strokeWidth={2} />
+                  {mounted && wishlistCount > 0 && (
+                    <span className="absolute top-1 right-1 md:top-0.5 md:right-0.5 bg-accent text-white text-[10px] font-semibold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center ring-2 ring-primary">
+                      {wishlistCount > 99 ? "99+" : wishlistCount}
                     </span>
                   )}
                 </Link>
                 <button
+                  type="button"
                   onClick={() => setIsCartOpen(true)}
-                  className="hover:text-white/80 transition-colors relative"
+                  aria-label={`Cart${mounted && cartCount > 0 ? ` (${cartCount} items)` : ""}`}
+                  className="relative inline-flex items-center justify-center h-11 w-11 md:h-10 md:w-10 rounded-full hover:bg-white/10 active:bg-white/15 hover:text-white/90 transition-colors"
                 >
-                  <ShoppingBag size={20} className="md:w-6 md:h-6" />
-                  {mounted && (
-                    <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-                      {cartCount}
+                  <ShoppingBag size={24} className="md:w-6 md:h-6" strokeWidth={2} />
+                  {mounted && cartCount > 0 && (
+                    <span className="absolute top-1 right-1 md:top-0.5 md:right-0.5 bg-accent text-white text-[10px] font-semibold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center ring-2 ring-primary">
+                      {cartCount > 99 ? "99+" : cartCount}
                     </span>
                   )}
                 </button>
@@ -389,7 +387,7 @@ export default function Navbar() {
       </header>
 
       {/* Spacer for fixed header */}
-      <div className={isScrolled ? "h-[70px]" : "h-[80px] md:h-[150px] lg:h-[160px]"} />
+      <div className={isScrolled ? "h-[70px]" : "h-[100px] md:h-[150px] lg:h-[160px]"} />
 
       {/* Mobile Drawer */}
       <AnimatePresence>
